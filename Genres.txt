@@ -1,0 +1,20 @@
+18 genres différents
+
+Action (semblable à Adventure)
+Adventure
+Animation
+Biography
+Comedy
+Crime
+Drama
+Family
+Fantasy
+Horror
+Mistery
+Music (semblable à Musical)
+Musical
+Romance
+Sci-Fi
+Sport
+Thriller
+War
