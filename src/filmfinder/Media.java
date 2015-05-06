@@ -9,13 +9,14 @@ public class Media {
 	private Integer annee;
 	private Type type;
 	private String synopsy;
-	private String director;
+	private String[] director;
 	private String[] casting;
 	private String[] genre;
 	private Integer duration;
 
 	public Media(String title, Integer annee, Type type, String synopsy,
-			String director, String[] casting, String[] genre, Integer duration) {
+			String[] director, String[] casting, String[] genre,
+			Integer duration) {
 		this.title = title;
 		this.annee = annee;
 		this.type = type;
@@ -58,11 +59,11 @@ public class Media {
 		this.synopsy = synopsy;
 	}
 
-	public String getDirector() {
+	public String[] getDirector() {
 		return director;
 	}
 
-	public void setDirector(String director) {
+	public void setDirector(String[] director) {
 		this.director = director;
 	}
 

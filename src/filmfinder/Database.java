@@ -13,14 +13,18 @@ public class Database {
 
 	public Database(String file) throws FileNotFoundException {
 		this.file = file;
+		medias = new ArrayList<Media>();
 		Scanner scanner = new Scanner(new FileReader(file));
 		while (scanner.hasNext()) {
 			String tampon = scanner.nextLine();
+			while (tampon.equals(""))
+				tampon = scanner.nextLine();
 			tampon = tampon.substring(tampon.indexOf(".") + 1);
 			String titre = eraseSpace(tampon.substring(0, tampon.indexOf("(")));
 			String annee = tampon.substring(tampon.indexOf("(") + 1,
 					tampon.indexOf(")"));
 			Type type;
+			Integer temps = null;
 			if (annee.indexOf(" ") == -1) {
 				type = Media.Type.FILM;
 			} else {
@@ -32,30 +36,66 @@ public class Database {
 			while (synopsi.equals(""))
 				synopsi = scanner.nextLine();
 			synopsi = eraseSpace(synopsi);
-			String director = "", casting[] = null, genre[] = null;
+			// TODO: PLUSIEURS DIRECTEUR /!\
+			String director[] = null, casting[] = null, genre[] = null;
 			do {
+				System.out.println("On boucle");
 				tampon = scanner.nextLine();
+
 				if (tampon.startsWith("Director")) {
-					director = tampon.substring(tampon.indexOf(":") + 1);
-					director = eraseSpace(director);
+					director = new String[countOccurence(tampon, ',')];
+					tampon = tampon.substring(tampon.indexOf(':') + 1);
+					for (int i = 0; i < director.length; i++) {
+						if (tampon.indexOf(',') != -1) {
+							director[i] = eraseSpace(tampon.substring(0,
+									tampon.indexOf(',')));
+							tampon.substring(tampon.indexOf(',') + 1);
+						} else
+							director[i] = eraseSpace(tampon);
+					}
 				} else if (tampon.startsWith("With")) {
-					/* TODO: compter les acteurs et les enregistrer */
-					// casting = new String[];
-				} else if (!tampon.equals(" ")) {
+					casting = new String[countOccurence(tampon, ',')];
+					tampon = tampon.substring(tampon.indexOf(':') + 1);
+					for (int i = 0; i < casting.length; i++) {
+						System.out.println("Occurence: " + i);
+						if (tampon.indexOf(',') != -1) {
+							casting[i] = eraseSpace(tampon.substring(0,
+									tampon.indexOf(',')));
+							tampon = tampon.substring(tampon.indexOf(',') + 1);
+						} else
+							casting[i] = eraseSpace(tampon);
+					}
+				} else if (!tampon.equals("")) {
 					/* TODO: compter les genres et les enregistrer */
+					genre = new String[countOccurence(tampon, '|')];
+					tampon = tampon.substring(tampon.indexOf(':') + 1);
+					for (int i = 0; i < genre.length; i++) {
+						System.out.println("Occurence: " + i);
+						if (tampon.indexOf('|') != -1) {
+							genre[i] = eraseSpace(tampon.substring(0,
+									tampon.indexOf('|')));
+							tampon = tampon.substring(tampon.indexOf('|') + 1);
+						} else if (tampon.indexOf("mins") != -1) {
+							tampon = eraseSpace(tampon.substring(0,
+									tampon.indexOf("mins")));
+							temps = Integer.parseInt(tampon.substring(tampon
+									.lastIndexOf(" ") + 1));
+							tampon = tampon.substring(0,
+									tampon.lastIndexOf(" "));
+							genre[i] = eraseSpace(tampon);
+						} else
+							genre[i] = eraseSpace(tampon);
+					}
 				}
 			} while (!tampon.equals(""));
-
-			System.out.println("-" + titre + "-");
-			System.out.println("-" + annee + "-");
-			System.out.println("-" + type + "-");
-			System.out.println("-" + synopsi + "-");
-			System.out.println("-" + director + "-");
+			medias.add(new Media(titre, Integer.parseInt(annee), type, synopsi,
+					director, casting, genre, temps));
+			for (int i = 0; director != null && i < director.length; i++)
+				System.out.println("-" + director[i] + "-");
 			for (int i = 0; casting != null && i < casting.length; i++)
 				System.out.println("-" + casting[i] + "-");
 			for (int i = 0; genre != null && i < genre.length; i++)
 				System.out.println("-" + genre[i] + "-");
-			break;
 		}
 
 	}
@@ -66,6 +106,18 @@ public class Database {
 		while (s.endsWith(" "))
 			s = s.substring(0, s.length() - 1);
 		return s;
+	}
+
+	private int countOccurence(String s, char c) {
+		String sub = s;
+		int res = 1;
+		while (sub.indexOf(c) != -1) {
+			System.out.println("");
+			res++;
+			sub = sub.substring(sub.indexOf(c) + 1);
+		}
+		System.out.println("On a " + res);
+		return res;
 	}
 
 	public ArrayList<Media> getMedias() {
