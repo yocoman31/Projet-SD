@@ -1,4 +1,4 @@
-18 genres différents
+19 genres différents :
 
 Action (semblable à Adventure)
 Adventure
@@ -9,6 +9,7 @@ Crime
 Drama
 Family
 Fantasy
+History
 Horror
 Mistery
 Music (semblable à Musical)
