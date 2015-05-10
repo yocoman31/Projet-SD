@@ -1,0 +1,19 @@
+Algorithme basique de recommandation des films:
+
+- Chaqu'un des films de la grande liste comptient un compteur initialisé à 0
+
+- L'utilisateur rentre les films qu'il a aimés
+
+- Pour chaque film de la grande liste, le compteur s'incrémente de 1 si il contient un acteur, un réalisteur ou un genre d'un des films rentré par l'utilisateur
+
+- Pour chaque film de la grande liste, le compteur s'incrémente de 1 si la durée est comprise entre +/- 15 min la durée moyenne des films déjà vus
+
+- Retourner à l'utilisateur les films qui possèdent le plus grand compteur.
+
+
+Algorithme amélioré :
+On procède de la même manière mais cette fois on incrémente le compteur du nombre d'occurence d'acteurs, de réalisateurs et de genres des films rentré par l'utilisateur.
+
+
+On peut apliquer l'algorithme sur les 3 critères mais aussi seulement sur un (ou plusieurs) de ces critères.
+L'algo peut être appliqué seulement au réalisateurs, acteur ou genres
