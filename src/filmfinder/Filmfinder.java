@@ -11,23 +11,24 @@ public class Filmfinder {
 		try {
 			Database database = new Database(args[0]);
 			ArrayList<String> films = new ArrayList<String>();
-			films.add("Spectre");
-			films.add("Cendrillon");
-			films.add("Game of Thrones");
+			films.add("Fast and Furious");
 			films.add("Fast & Furious 7");
-			films.add("Home");
-			films.add("Interstellar");
-			films.add("Batman v Superman: Dawn of Justice");
 			
 			Algorithm algo = new Algorithm(films, database);
 			
+			int poidsgenre = 1;
+			int poidscasting = 1;
+			int poidsdirector = 1;
+			boolean duration = false;
+			
+		
 			algo.setCoefficientsGenres();
 			algo.setCoefficientsCasting();
 			algo.setCoefficientsDirectors();
+			algo.setCoefficientsDuration();
 			
-			algo.setCompteurFilms();
-			
-			algo.recommandations(10);
+			algo.setCompteurFilms(poidsgenre, poidsdirector, poidscasting, duration);
+			algo.recommandations(10, "tout");
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
