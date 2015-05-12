@@ -22,6 +22,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class View extends JFrame {
 	private static final long serialVersionUID = -4074747536669981312L;
@@ -34,8 +36,9 @@ public class View extends JFrame {
 
 	public View(Database database) {
 		super("Film Finder");
+		GridLayout lay = new GridLayout(2, 3);
 		pan = new JPanel();
-		pan.setLayout(new GridLayout(2, 3));
+		pan.setLayout(lay);
 		this.database = database;
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,6 +70,7 @@ public class View extends JFrame {
 		for (Media m : database.getMedias()) {
 			T4.add(m);
 		}
+		T4.sort();
 
 		pan.add(new JScrollPane(lis));
 
@@ -106,6 +110,13 @@ public class View extends JFrame {
 		JLabel titre2 = new JLabel("Résultat");
 		pan.add(titre2);
 
+		lis.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				System.out.println(T4.getElementAt(lis.getSelectedIndex())
+						.toString());
+
+			}
+		});
 		addDatabaseItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JFileChooser dialogue = new JFileChooser();

@@ -99,6 +99,11 @@ public class Media implements Comparable<Media> {
 		return res;
 	}
 
+	public String getInfo() {
+		// TODO: à implémenter
+		return null;
+	}
+
 	public int compareTo(Media m) {
 		return this.title.compareToIgnoreCase(m.title);
 	}
