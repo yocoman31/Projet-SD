@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -22,7 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -30,11 +29,15 @@ public class View extends JFrame {
 	private static final long serialVersionUID = -4074747536669981312L;
 	private JList<Media> lis;
 	ArrayListModel T4;
-	DefaultListModel<String> filmsVus;
+	ArrayListModel filmsVus;
+	JList<Media> listfv;
+	ArrayListModel filmsres;
+	JList<Media> listRes;
 	Database database;
 	JButton add, remove;
 	private JPanel pan = new JPanel();
-	JTextArea titre1;
+	JTextPane titre1;
+	JScrollPane titre1pan;
 
 	public View(Database database) {
 		super("Film Finder");
@@ -93,11 +96,23 @@ public class View extends JFrame {
 		panButon.add(panButon2);
 		pan.add(panButon);
 		// lis = new JList<String>();
-		pan.add(new JScrollPane());
-		titre1 = new JTextArea("Info");
-		titre1.setEditable(false);
 
-		pan.add(titre1);
+		filmsVus = new ArrayListModel();
+		listfv = new JList<Media>(filmsVus);
+
+		listRes = new JList<Media>();
+
+		pan.add(new JScrollPane(listfv));
+		titre1 = new JTextPane();
+		titre1.setContentType("text/html");
+		titre1.setOpaque(false);
+		// titre1.setBackground(Color.);
+		// titre1.setEditable(false);
+		// titre1.set
+		titre1.setText("<h2>Informations</h2>");
+		titre1pan = new JScrollPane(titre1);
+		// titre1pan.add(titre1);
+		pan.add(titre1pan);
 
 		JPanel panbtngo = new JPanel();
 		JPanel panin = new JPanel();
@@ -115,10 +130,25 @@ public class View extends JFrame {
 
 		lis.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				Media t = (Media) T4.getElementAt(lis.getSelectedIndex());
-				System.out.println(t.getInfo());
-				titre1.setText(t.getInfo());
-
+				if (lis.isSelectionEmpty() == false) {
+					Media t = (Media) T4.getElementAt(lis.getSelectedIndex());
+					System.out.println(t.getInfo());
+					titre1.setText(t.getInfo());
+				}
+			}
+		});
+		listfv.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (listfv.isSelectionEmpty() == false) {
+					Media t = (Media) filmsVus.getElementAt(listfv
+							.getSelectedIndex());
+					System.out.println(t.getInfo());
+					titre1.setText(t.getInfo());
+				}
+				// System.out.println(t.getInfo());
+				// titre1.setText(t.getInfo());
+				// titre1.setSelectionStart(0);
+				// listfv.updateUI();
 			}
 		});
 		addDatabaseItem.addActionListener(new ActionListener() {
@@ -144,6 +174,37 @@ public class View extends JFrame {
 				}
 			}
 		});
+		add.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (lis.isSelectionEmpty() == false) {
+					// List<Media> listinter=lis.getSelectedValuesList()
+					for (Media m : lis.getSelectedValuesList()) {
+						if (!filmsVus.contains(m)) {
+							filmsVus.add(m);
+							T4.remove(m);
+						}
+					}
+					listfv.updateUI();
+					lis.clearSelection();
+					lis.updateUI();
+				}
+			}
+		});
+		remove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (listfv.isSelectionEmpty() == false) {
+					// List<Media> listinter=lis.getSelectedValuesList()
+					for (Media m : listfv.getSelectedValuesList()) {
+						T4.add(m);
+						filmsVus.remove(m);
+					}
+					listfv.clearSelection();
+					listfv.updateUI();
+					T4.sort();
+					lis.updateUI();
+				}
+			}
+		});
 
 		this.setVisible(true);
 
@@ -163,12 +224,20 @@ class ArrayListModel extends AbstractListModel {
 
 	private List data = new ArrayList();
 
+	public boolean contains(Object o) {
+		return data.contains(o);
+	}
+
 	public Object getElementAt(int index) {
 		return this.data.get(index);
 	}
 
 	public int getSize() {
 		return this.data.size();
+	}
+
+	public void remove(Object o) {
+		data.remove(o);
 	}
 
 	public void add(Object element) {

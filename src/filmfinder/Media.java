@@ -101,46 +101,47 @@ public class Media implements Comparable<Media> {
 
 	public String getInfo() {
 		// TODO: à implémenter
-		String res = "Titre: " + this.title + "\n";
+		String res = "<html<h2>Informations:</h2><b>Titre:</b> " + this.title
+				+ "<br>";
 
 		if (annee != null)
-			res += "Année: " + annee + "\n";
+			res += "<b>Année: </b>" + annee + "<br>";
 		if (type == Media.Type.FILM)
-			res += "Type: Film\n";
+			res += "<b>Type:</b> Film<br>";
 		else
-			res += "Type: Serie\n";
-		res += "Synopsy: " + synopsy + "\n";
+			res += "<b>Type:</b> Serie<br>";
+		res += "<b>Synopsy:</b> " + synopsy + "<br>";
 		// this.synopsy = synopsy;
 		if (director != null) {
-			res += "Réalisateur(s) :";
+			res += "<b>Réalisateur(s): </b>";
 			for (int i = 0; i < director.length; i++) {
 				res += director[i];
 				if (i != director.length - 1)
 					res += ", ";
 			}
-			res += "\n";
+			res += "<br>";
 		}
 		if (casting != null) {
-			res += "Casting :";
+			res += "<b>Casting :</b>";
 			for (int i = 0; i < casting.length; i++) {
 				res += casting[i];
 				if (i != casting.length - 1)
 					res += ", ";
 			}
-			res += "\n";
+			res += "<br>";
 		}
 		if (genre != null) {
-			res += "Genre :";
+			res += "<b>Genre :</b>";
 			for (int i = 0; i < genre.length; i++) {
 				res += genre[i];
 				if (i != genre.length - 1)
 					res += ", ";
 			}
-			res += "\n";
+			res += "<br>";
 		}
 		if (duration != null)
-			res += "Durée: " + duration + "\n";
-		return res;
+			res += "<b>Durée: </b>" + duration + "<br>";
+		return res + "</html>";
 	}
 
 	public int compareTo(Media m) {
