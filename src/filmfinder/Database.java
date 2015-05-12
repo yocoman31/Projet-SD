@@ -1,27 +1,51 @@
+//TODO: Implémenter le JSON
 package filmfinder;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import filmfinder.Media.Type;
 
-public class Database {
-	private String file;
-	private ArrayList<Media> medias;
+/**
+ * Class representing a film database
+ * 
+ * @author Yoni Levy & Romain Tissier
+ *
+ */
+public class Database extends LinkedList<Media> {
 
-	public Database() {
-		medias = new ArrayList<Media>();
-	}
+	private static final long serialVersionUID = -5768949048626790295L;
 
+	/**
+	 * Constructor initializing a database
+	 * 
+	 * @param file
+	 *            : path of the file containing a list of film
+	 * @throws FileNotFoundException
+	 */
 	public Database(String file) throws FileNotFoundException {
-		this();
-		this.addDatabaseFile(file);
+		super();
+		this.loadDatabaseFile(file);
 	}
 
-	public void addDatabaseFile(String file) throws FileNotFoundException {
-		this.file = file;
+	/**
+	 * Constructor initializing the superclass
+	 */
+	public Database() {
+		super();
+	}
+
+	/**
+	 * Methode use to load a database file and fill the Database Object
+	 * 
+	 * @param file
+	 *            : path of the file containing a list of film
+	 * @throws FileNotFoundException
+	 */
+	public void loadDatabaseFile(String file) throws FileNotFoundException {
+		// TODO: utiliser des régex
 		Scanner scanner = new Scanner(new FileReader(file));
 		while (scanner.hasNext()) {
 			String tampon = scanner.nextLine();
@@ -49,7 +73,7 @@ public class Database {
 				System.out.println("On boucle");
 				tampon = scanner.nextLine();
 				if (tampon.startsWith("Director")) {
-					director = new String[countOccurence(tampon, ',')];
+					director = new String[Utils.countOccurence(tampon, ',')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < director.length; i++) {
 						if (tampon.indexOf(',') != -1) {
@@ -60,7 +84,7 @@ public class Database {
 							director[i] = Utils.eraseSpace(tampon);
 					}
 				} else if (tampon.startsWith("With")) {
-					casting = new String[countOccurence(tampon, ',')];
+					casting = new String[Utils.countOccurence(tampon, ',')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < casting.length; i++) {
 						System.out.println("Occurence: " + i);
@@ -72,7 +96,7 @@ public class Database {
 							casting[i] = Utils.eraseSpace(tampon);
 					}
 				} else if (!tampon.equals("")) {
-					genre = new String[countOccurence(tampon, '|')];
+					genre = new String[Utils.countOccurence(tampon, '|')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < genre.length; i++) {
 						System.out.println("Occurence: " + i);
@@ -93,7 +117,7 @@ public class Database {
 					}
 				}
 			} while (!tampon.equals(""));
-			medias.add(new Media(titre, Integer.parseInt(annee), type, synopsi,
+			this.add(new Media(titre, Integer.parseInt(annee), type, synopsi,
 					director, casting, genre, temps));
 			for (int i = 0; director != null && i < director.length; i++)
 				System.out.println("-" + director[i] + "-");
@@ -102,35 +126,7 @@ public class Database {
 			for (int i = 0; genre != null && i < genre.length; i++)
 				System.out.println("-" + genre[i] + "-");
 		}
-
-	}
-
-	private int countOccurence(String s, char c) {
-		String sub = s;
-		int res = 1;
-		while (sub.indexOf(c) != -1) {
-			System.out.println("");
-			res++;
-			sub = sub.substring(sub.indexOf(c) + 1);
-		}
-		System.out.println("On a " + res);
-		return res;
-	}
-
-	public ArrayList<Media> getMedias() {
-		return medias;
-	}
-
-	public void setMedias(ArrayList<Media> medias) {
-		this.medias = medias;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
+		scanner.close();
 	}
 
 }

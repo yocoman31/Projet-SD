@@ -100,7 +100,6 @@ public class Media implements Comparable<Media> {
 	}
 
 	public String getInfo() {
-		// TODO: à implémenter
 		String res = "<html<h2>Informations:</h2><b>Titre:</b> " + this.title
 				+ "<br>";
 
@@ -111,7 +110,6 @@ public class Media implements Comparable<Media> {
 		else
 			res += "<b>Type:</b> Serie<br>";
 		res += "<b>Synopsy:</b> " + synopsy + "<br>";
-		// this.synopsy = synopsy;
 		if (director != null) {
 			res += "<b>Réalisateur(s): </b>";
 			for (int i = 0; i < director.length; i++) {

@@ -3,12 +3,10 @@ package filmfinder;
 import java.util.ArrayList;
 
 public class Algorithm {
-
 	Database database;
 	ArrayList<String> filmsvus = new ArrayList<String>();
 	ArrayList<String> filmsPasVus = new ArrayList<String>();
 	ArrayList<Integer> cptFilms = new ArrayList<Integer>();
-
 	ArrayList<String> genres = new ArrayList<String>();
 	ArrayList<Integer> coefgenres = new ArrayList<Integer>();
 	ArrayList<String> directors = new ArrayList<String>();
@@ -20,8 +18,8 @@ public class Algorithm {
 	public Algorithm(ArrayList<String> filmsvus, Database database) {
 		this.filmsvus = filmsvus;
 		this.database = database;
-		for (int i = 0; i < database.getMedias().size(); i++) {
-			filmsPasVus.add(database.getMedias().get(i).getTitle());
+		for (int i = 0; i < database.size(); i++) {
+			filmsPasVus.add(database.get(i).getTitle());
 		}
 		for (int i = 0; i < filmsvus.size(); i++) {
 			filmsPasVus.remove(filmsvus.get(i));
@@ -38,14 +36,13 @@ public class Algorithm {
 		int indice;
 		boolean dedans = false;
 		for (int i = 0; i < filmsvus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					for (int k = 0; k < database.getMedias().get(j).getGenre().length; k++) {
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsvus.get(i).equals(database.get(j).getTitle())) {
+					for (int k = 0; k < database.get(j).getGenre().length; k++) {
 						if (!genres.isEmpty()) {
 							for (int l = 0; l < genres.size(); l++) {
-								if (database.getMedias().get(j).getGenre()[k]
-										.equals(genres.get(l))) {
+								if (database.get(j).getGenre()[k].equals(genres
+										.get(l))) {
 									dedans = true;
 								} else {
 									dedans = false;
@@ -53,11 +50,11 @@ public class Algorithm {
 							}
 						}
 						if (!dedans) {
-							genres.add(database.getMedias().get(j).getGenre()[k]);
+							genres.add(database.get(j).getGenre()[k]);
 							coefgenres.add(1);
 						} else {
-							indice = genres.indexOf(database.getMedias().get(j)
-									.getGenre()[k]);
+							indice = genres
+									.indexOf(database.get(j).getGenre()[k]);
 							System.out.println(indice);
 							coefgenres.set(indice, coefgenres.get(indice) + 1);
 						}
@@ -75,17 +72,14 @@ public class Algorithm {
 		int indice;
 		boolean dedans = false;
 		for (int i = 0; i < filmsvus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					if (database.getMedias().get(j).getDirector() != null) {
-						for (int k = 0; k < database.getMedias().get(j)
-								.getDirector().length; k++) {
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsvus.get(i).equals(database.get(j).getTitle())) {
+					if (database.get(j).getDirector() != null) {
+						for (int k = 0; k < database.get(j).getDirector().length; k++) {
 							if (!directors.isEmpty()) {
 								for (int l = 0; l < directors.size(); l++) {
-									if (database.getMedias().get(j)
-											.getDirector()[k].equals(directors
-											.get(l))) {
+									if (database.get(j).getDirector()[k]
+											.equals(directors.get(l))) {
 										dedans = true;
 									} else {
 										dedans = false;
@@ -93,12 +87,11 @@ public class Algorithm {
 								}
 							}
 							if (!dedans) {
-								directors.add(database.getMedias().get(j)
-										.getDirector()[k]);
+								directors.add(database.get(j).getDirector()[k]);
 								coefdirectors.add(1);
 							} else {
-								indice = directors.indexOf(database.getMedias()
-										.get(j).getDirector()[k]);
+								indice = directors.indexOf(database.get(j)
+										.getDirector()[k]);
 								coefdirectors.set(indice,
 										coefdirectors.get(indice) + 1);
 							}
@@ -116,14 +109,12 @@ public class Algorithm {
 		int indice;
 		boolean dedans = false;
 		for (int i = 0; i < filmsvus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					for (int k = 0; k < database.getMedias().get(j)
-							.getCasting().length; k++) {
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsvus.get(i).equals(database.get(j).getTitle())) {
+					for (int k = 0; k < database.get(j).getCasting().length; k++) {
 						if (!casting.isEmpty()) {
 							for (int l = 0; l < casting.size(); l++) {
-								if (database.getMedias().get(j).getCasting()[k]
+								if (database.get(j).getCasting()[k]
 										.equals(casting.get(l))) {
 									dedans = true;
 								} else {
@@ -132,12 +123,11 @@ public class Algorithm {
 							}
 						}
 						if (!dedans) {
-							casting.add(database.getMedias().get(j)
-									.getCasting()[k]);
+							casting.add(database.get(j).getCasting()[k]);
 							coefcasting.add(1);
 						} else {
-							indice = casting.indexOf(database.getMedias()
-									.get(j).getCasting()[k]);
+							indice = casting.indexOf(database.get(j)
+									.getCasting()[k]);
 							coefcasting
 									.set(indice, coefcasting.get(indice) + 1);
 						}
@@ -154,12 +144,10 @@ public class Algorithm {
 		int total = 0;
 		int cpt = 0;
 		for (int i = 0; i < filmsvus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					if (database.getMedias().get(j).getDuration() != null) {
-						total = total
-								+ database.getMedias().get(j).getDuration();
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsvus.get(i).equals(database.get(j).getTitle())) {
+					if (database.get(j).getDuration() != null) {
+						total = total + database.get(j).getDuration();
 						cpt += 1;
 					}
 				}
@@ -187,13 +175,12 @@ public class Algorithm {
 			int poidscasting, boolean duration) {
 		// incrémentation du compteur pour les genres
 		for (int i = 0; i < filmsPasVus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsPasVus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					for (int k = 0; k < database.getMedias().get(j).getGenre().length; k++) {
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
+					for (int k = 0; k < database.get(j).getGenre().length; k++) {
 						for (int l = 0; l < genres.size(); l++) {
-							if (database.getMedias().get(j).getGenre()[k]
-									.equals(genres.get(l))) {
+							if (database.get(j).getGenre()[k].equals(genres
+									.get(l))) {
 								cptFilms.set(i, cptFilms.get(i) + poidsgenre
 										* coefgenres.get(l));
 							}
@@ -206,14 +193,12 @@ public class Algorithm {
 
 		// incrémentation du compteur pour les directors
 		for (int i = 0; i < filmsPasVus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsPasVus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					if (database.getMedias().get(j).getDirector() != null) {
-						for (int k = 0; k < database.getMedias().get(j)
-								.getDirector().length; k++) {
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
+					if (database.get(j).getDirector() != null) {
+						for (int k = 0; k < database.get(j).getDirector().length; k++) {
 							for (int l = 0; l < directors.size(); l++) {
-								if (database.getMedias().get(j).getDirector()[k]
+								if (database.get(j).getDirector()[k]
 										.equals(directors.get(l))) {
 									cptFilms.set(i,
 											cptFilms.get(i) + poidsdirector
@@ -229,14 +214,12 @@ public class Algorithm {
 
 		// incrémentation du compteur pour les castings
 		for (int i = 0; i < filmsPasVus.size(); i++) {
-			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsPasVus.get(i).equals(
-						database.getMedias().get(j).getTitle())) {
-					for (int k = 0; k < database.getMedias().get(j)
-							.getCasting().length; k++) {
+			for (int j = 0; j < database.size(); j++) {
+				if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
+					for (int k = 0; k < database.get(j).getCasting().length; k++) {
 						for (int l = 0; l < casting.size(); l++) {
-							if (database.getMedias().get(j).getCasting()[k]
-									.equals(casting.get(l))) {
+							if (database.get(j).getCasting()[k].equals(casting
+									.get(l))) {
 								cptFilms.set(i, cptFilms.get(i) + poidscasting
 										* coefcasting.get(l));
 							}
@@ -251,13 +234,11 @@ public class Algorithm {
 		// moyenne
 		if (duration) {
 			for (int i = 0; i < filmsPasVus.size(); i++) {
-				for (int j = 0; j < database.getMedias().size(); j++) {
-					if (filmsPasVus.get(i).equals(
-							database.getMedias().get(j).getTitle())) {
-						if (database.getMedias().get(j).getDuration() != null) {
-							if (database.getMedias().get(j).getDuration() <= intermediateduration + 15
-									&& database.getMedias().get(j)
-											.getDuration() >= intermediateduration - 15) {
+				for (int j = 0; j < database.size(); j++) {
+					if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
+						if (database.get(j).getDuration() != null) {
+							if (database.get(j).getDuration() <= intermediateduration + 15
+									&& database.get(j).getDuration() >= intermediateduration - 15) {
 								cptFilms.set(i, cptFilms.get(i) + 1);
 							}
 						}
@@ -278,11 +259,9 @@ public class Algorithm {
 		ArrayList<String> res = new ArrayList<String>();
 		if (type.equals("film")) {
 			for (int i = 0; i < filmsPasVus.size(); i++) {
-				for (int j = 0; j < database.getMedias().size(); j++) {
-					if (filmsPasVus.get(i).equals(
-							database.getMedias().get(j).getTitle())) {
-						if (database.getMedias().get(j).getType()
-								.equals(Media.Type.SERIE)) {
+				for (int j = 0; j < database.size(); j++) {
+					if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
+						if (database.get(j).getType().equals(Media.Type.SERIE)) {
 							filmsPasVus.remove(i);
 							cptFilms.remove(i);
 						}
@@ -291,11 +270,9 @@ public class Algorithm {
 			}
 		} else if (type.equals("série")) {
 			for (int i = 0; i < filmsPasVus.size(); i++) {
-				for (int j = 0; j < database.getMedias().size(); j++) {
-					if (filmsPasVus.get(i).equals(
-							database.getMedias().get(j).getTitle())) {
-						if (database.getMedias().get(j).getType()
-								.equals(Media.Type.FILM)) {
+				for (int j = 0; j < database.size(); j++) {
+					if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
+						if (database.get(j).getType().equals(Media.Type.FILM)) {
 							filmsPasVus.remove(i);
 							cptFilms.remove(i);
 						}
@@ -323,5 +300,27 @@ public class Algorithm {
 		}
 		return res;
 
+	}
+
+	public final static void execute(ArrayList<String> filmSeen,
+			Database database, Integer poidsgenre, Integer poidscasting,
+			Integer poidsdirector, Boolean duration) {
+		Algorithm algo = new Algorithm(filmSeen, database);
+		if (poidsgenre == null)
+			poidsgenre = 1;
+		if (poidscasting == null)
+			poidscasting = 1;
+		if (poidsdirector == null)
+			poidsdirector = 1;
+		if (duration == null)
+			duration = false;
+
+		algo.setCoefficientsGenres();
+		algo.setCoefficientsCasting();
+		algo.setCoefficientsDirectors();
+		algo.setCoefficientsDuration();
+
+		algo.setCompteurFilms(poidsgenre, poidsdirector, poidscasting, duration);
+		algo.recommandations(10, "tout");
 	}
 }

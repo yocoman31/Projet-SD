@@ -71,7 +71,7 @@ public class View extends JFrame {
 
 		T4 = new ArrayListModel();
 		lis = new JList<Media>(T4);
-		for (Media m : database.getMedias()) {
+		for (Media m : database) {
 			T4.add(m);
 		}
 		T4.sort();
@@ -160,8 +160,8 @@ public class View extends JFrame {
 					try {
 						if (dialogue.getSelectedFile().getPath()
 								.endsWith(".txt")) {
-							database.addDatabaseFile(dialogue.getSelectedFile()
-									.getPath());
+							database.loadDatabaseFile(dialogue
+									.getSelectedFile().getPath());
 							update();
 						} else
 							JOptionPane.showMessageDialog(vu,
@@ -231,7 +231,6 @@ public class View extends JFrame {
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (listfv.isSelectionEmpty() == false) {
-					// List<Media> listinter=lis.getSelectedValuesList()
 					for (Media m : listfv.getSelectedValuesList()) {
 						T4.add(m);
 						filmsVus.remove(m);
@@ -249,7 +248,7 @@ public class View extends JFrame {
 	}
 
 	public void update() {
-		for (Media m : database.getMedias()) {
+		for (Media m : database) {
 			T4.add(m);
 		}
 		T4.sort();
@@ -283,10 +282,7 @@ class ArrayListModel extends AbstractListModel {
 	}
 
 	public void add(Object element) {
-		// On ajoute un élément à la liste :
 		this.data.add(element);
-		// On envoi un évenement pour signaler l'ajout :
-		// fireIntervalAdded(this, this.getSize(), this.getSize());
 	}
 
 	public int size() {
@@ -294,10 +290,7 @@ class ArrayListModel extends AbstractListModel {
 	}
 
 	public void sort() {
-		// On trie les données :
 		Collections.sort(this.data);
-		// On envoi un évenement pour signaler que les données ont changées :
-		// fireContentsChanged(this, 0, this.getSize());
 	}
 
 }
