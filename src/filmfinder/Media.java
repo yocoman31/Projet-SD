@@ -1,6 +1,6 @@
 package filmfinder;
 
-public class Media {
+public class Media implements Comparable<Media> {
 	public static enum Type {
 		SERIE, FILM;
 	}
@@ -89,5 +89,17 @@ public class Media {
 
 	public void setDuration(Integer duration) {
 		this.duration = duration;
+	}
+
+	public String toString() {
+		String res = this.title + " (" + this.annee;
+		if (this.type == Media.Type.SERIE)
+			res = res + " , TV Series";
+		res = res + ")";
+		return res;
+	}
+
+	public int compareTo(Media m) {
+		return this.title.compareToIgnoreCase(m.title);
 	}
 }
