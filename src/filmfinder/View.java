@@ -22,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -33,6 +34,7 @@ public class View extends JFrame {
 	Database database;
 	JButton add, remove;
 	private JPanel pan = new JPanel();
+	JTextArea titre1;
 
 	public View(Database database) {
 		super("Film Finder");
@@ -92,8 +94,9 @@ public class View extends JFrame {
 		pan.add(panButon);
 		// lis = new JList<String>();
 		pan.add(new JScrollPane());
+		titre1 = new JTextArea("Info");
+		titre1.setEditable(false);
 
-		JLabel titre1 = new JLabel("Info");
 		pan.add(titre1);
 
 		JPanel panbtngo = new JPanel();
@@ -112,8 +115,9 @@ public class View extends JFrame {
 
 		lis.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				System.out.println(T4.getElementAt(lis.getSelectedIndex())
-						.toString());
+				Media t = (Media) T4.getElementAt(lis.getSelectedIndex());
+				System.out.println(t.getInfo());
+				titre1.setText(t.getInfo());
 
 			}
 		});
