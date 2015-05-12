@@ -1,6 +1,6 @@
 package filmfinder;
 
-public class Media {
+public class Media implements Comparable<Media> {
 	public static enum Type {
 		SERIE, FILM;
 	}
@@ -89,5 +89,61 @@ public class Media {
 
 	public void setDuration(Integer duration) {
 		this.duration = duration;
+	}
+
+	public String toString() {
+		String res = this.title + " (" + this.annee;
+		if (this.type == Media.Type.SERIE)
+			res = res + " , TV Series";
+		res = res + ")";
+		return res;
+	}
+
+	public String getInfo() {
+		// TODO: à implémenter
+		String res = "Titre: " + this.title + "\n";
+
+		if (annee != null)
+			res += "Année: " + annee + "\n";
+		if (type == Media.Type.FILM)
+			res += "Type: Film\n";
+		else
+			res += "Type: Serie\n";
+		res += "Synopsy: " + synopsy + "\n";
+		// this.synopsy = synopsy;
+		if (director != null) {
+			res += "Réalisateur(s) :";
+			for (int i = 0; i < director.length; i++) {
+				res += director[i];
+				if (i != director.length - 1)
+					res += ", ";
+			}
+			res += "\n";
+		}
+		if (casting != null) {
+			res += "Casting :";
+			for (int i = 0; i < casting.length; i++) {
+				res += casting[i];
+				if (i != casting.length - 1)
+					res += ", ";
+			}
+			res += "\n";
+		}
+		if (genre != null) {
+			res += "Genre :";
+			for (int i = 0; i < genre.length; i++) {
+				res += genre[i];
+				if (i != genre.length - 1)
+					res += ", ";
+			}
+			res += "\n";
+		}
+		if (duration != null)
+			res += "Durée: " + duration + "\n";
+		return res;
+	}
+
+	public int compareTo(Media m) {
+		return this.title.compareToIgnoreCase(m.title);
 	}
 }

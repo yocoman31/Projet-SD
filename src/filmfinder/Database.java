@@ -11,9 +11,17 @@ public class Database {
 	private String file;
 	private ArrayList<Media> medias;
 
-	public Database(String file) throws FileNotFoundException {
-		this.file = file;
+	public Database() {
 		medias = new ArrayList<Media>();
+	}
+
+	public Database(String file) throws FileNotFoundException {
+		this();
+		this.addDatabase(file);
+	}
+
+	public void addDatabase(String file) throws FileNotFoundException {
+		this.file = file;
 		Scanner scanner = new Scanner(new FileReader(file));
 		while (scanner.hasNext()) {
 			String tampon = scanner.nextLine();
@@ -31,17 +39,14 @@ public class Database {
 				type = Media.Type.SERIE;
 				annee = annee.substring(0, 4);
 			}
-
 			String synopsi = "";
 			while (synopsi.equals(""))
 				synopsi = scanner.nextLine();
 			synopsi = eraseSpace(synopsi);
-			// TODO: PLUSIEURS DIRECTEUR /!\
 			String director[] = null, casting[] = null, genre[] = null;
 			do {
 				System.out.println("On boucle");
 				tampon = scanner.nextLine();
-
 				if (tampon.startsWith("Director")) {
 					director = new String[countOccurence(tampon, ',')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
@@ -66,7 +71,6 @@ public class Database {
 							casting[i] = eraseSpace(tampon);
 					}
 				} else if (!tampon.equals("")) {
-					/* TODO: compter les genres et les enregistrer */
 					genre = new String[countOccurence(tampon, '|')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < genre.length; i++) {
@@ -100,7 +104,7 @@ public class Database {
 
 	}
 
-	private String eraseSpace(String s) {
+	public static String eraseSpace(String s) {
 		while (s.startsWith(" "))
 			s = s.substring(1);
 		while (s.endsWith(" "))
