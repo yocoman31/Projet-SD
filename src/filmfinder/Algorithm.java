@@ -135,14 +135,20 @@ public class Algorithm {
 	 */
 	public void setCoefficientsDuration() {
 		int total = 0;
+		int cpt = 0;
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
 				if (filmsvus.get(i).equals(database.getMedias().get(j).getTitle())) {
-					total = total + database.getMedias().get(j).getDuration();
+					if (database.getMedias().get(j).getDuration() != null) {
+						total = total + database.getMedias().get(j).getDuration();
+						cpt += 1;
+					}
 				}
 			}
 		}
-		intermediateduration = total/filmsvus.size();
+		if (cpt != 0) {
+			intermediateduration = total/cpt;
+		}
 	}
 	
 	/**

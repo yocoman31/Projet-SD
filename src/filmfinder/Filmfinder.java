@@ -35,7 +35,20 @@ public class Filmfinder {
 			}
 		}
 		if (cli) {
-
+			Algorithm algo = new Algorithm(film, database);
+			
+			int poidsgenre = 1;
+			int poidscasting = 1;
+			int poidsdirector = 1;
+			boolean duration = false;
+		
+			algo.setCoefficientsGenres();
+			algo.setCoefficientsCasting();
+			algo.setCoefficientsDirectors();
+			algo.setCoefficientsDuration();
+			
+			algo.setCompteurFilms(poidsgenre, poidsdirector, poidscasting, duration);
+			algo.recommandations(10, "tout");
 		} else {
 			System.out.println("cond vraie!");
 			final View view = new View(database);
