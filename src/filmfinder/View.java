@@ -13,7 +13,6 @@ import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -32,7 +31,7 @@ public class View extends JFrame {
 	ArrayListModel filmsVus;
 	JList<Media> listfv;
 	ArrayListModel filmsres;
-	JList<Media> listRes;
+	JList<String> listRes;
 	Database database;
 	JButton add, remove;
 	private JPanel pan = new JPanel();
@@ -100,15 +99,16 @@ public class View extends JFrame {
 		filmsVus = new ArrayListModel();
 		listfv = new JList<Media>(filmsVus);
 
-		listRes = new JList<Media>();
+		filmsres = new ArrayListModel();
+		filmsres.add("No recommandation yet");
+		filmsres.add("Please click \"find\" to find new film");
+		listRes = new JList<String>(filmsres);
+		listRes.setEnabled(false);
 
 		pan.add(new JScrollPane(listfv));
 		titre1 = new JTextPane();
 		titre1.setContentType("text/html");
 		titre1.setOpaque(false);
-		// titre1.setBackground(Color.);
-		// titre1.setEditable(false);
-		// titre1.set
 		titre1.setText("<h2>Informations</h2>");
 		titre1pan = new JScrollPane(titre1);
 		// titre1pan.add(titre1);
@@ -118,15 +118,14 @@ public class View extends JFrame {
 		JPanel panin = new JPanel();
 		panin.setLayout(new GridBagLayout());
 		// panbtngo.setLayout(new GridLayout());
-		JButton btngo = new JButton("Search");
+		JButton btngo = new JButton("Find :");
 		panbtngo.add(btngo);
 		panin.add(panbtngo);
 		pan.add(panin);
 
 		this.setContentPane(pan);
 
-		JLabel titre2 = new JLabel("Résultat");
-		pan.add(titre2);
+		pan.add(new JScrollPane(listRes));
 
 		lis.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -144,6 +143,7 @@ public class View extends JFrame {
 							.getSelectedIndex());
 					System.out.println(t.getInfo());
 					titre1.setText(t.getInfo());
+
 				}
 				// System.out.println(t.getInfo());
 				// titre1.setText(t.getInfo());
@@ -160,7 +160,7 @@ public class View extends JFrame {
 					try {
 						if (dialogue.getSelectedFile().getPath()
 								.endsWith(".txt")) {
-							database.addDatabase(dialogue.getSelectedFile()
+							database.addDatabaseFile(dialogue.getSelectedFile()
 									.getPath());
 							update();
 						} else
@@ -187,6 +187,44 @@ public class View extends JFrame {
 					listfv.updateUI();
 					lis.clearSelection();
 					lis.updateUI();
+				}
+			}
+		});
+		btngo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (filmsVus.getSize() > 0) {
+					ArrayList<String> films = new ArrayList<String>();
+					for (int i = 0; i < filmsVus.size(); i++) {
+						films.add(((Media) filmsVus.getElementAt(i)).getTitle());
+					}
+					Algorithm algo = new Algorithm(films, database);
+
+					int poidsgenre = 1;
+					int poidscasting = 1;
+					int poidsdirector = 1;
+					boolean duration = false;
+
+					algo.setCoefficientsGenres();
+					algo.setCoefficientsCasting();
+					algo.setCoefficientsDirectors();
+					algo.setCoefficientsDuration();
+
+					algo.setCompteurFilms(poidsgenre, poidsdirector,
+							poidscasting, duration);
+					ArrayList<String> resa = algo.recommandations(10, "tout");
+					listRes.setEnabled(true);
+
+					for (int i = filmsres.getSize() - 1; i >= 0; i--) {
+						filmsres.remove(i);
+					}
+
+					for (String s : resa) {
+						filmsres.add(s);
+					}
+					listRes.updateUI();
+
+				} else {
+					// TODO: popup d'erreur :) ou griser bouton?
 				}
 			}
 		});
@@ -240,11 +278,19 @@ class ArrayListModel extends AbstractListModel {
 		data.remove(o);
 	}
 
+	public void remove(int index) {
+		data.remove(index);
+	}
+
 	public void add(Object element) {
 		// On ajoute un élément à la liste :
 		this.data.add(element);
 		// On envoi un évenement pour signaler l'ajout :
 		// fireIntervalAdded(this, this.getSize(), this.getSize());
+	}
+
+	public int size() {
+		return this.data.size();
 	}
 
 	public void sort() {

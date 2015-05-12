@@ -16,7 +16,7 @@ public class Algorithm {
 	ArrayList<String> casting = new ArrayList<String>();
 	ArrayList<Integer> coefcasting = new ArrayList<Integer>();
 	int intermediateduration;
-	
+
 	public Algorithm(ArrayList<String> filmsvus, Database database) {
 		this.filmsvus = filmsvus;
 		this.database = database;
@@ -30,7 +30,7 @@ public class Algorithm {
 			cptFilms.add(0);
 		}
 	}
-	
+
 	/**
 	 * Fonction qui compte le nombre d'apparition des genres dans les films vus
 	 */
@@ -39,11 +39,13 @@ public class Algorithm {
 		boolean dedans = false;
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(database.getMedias().get(j).getTitle())) {
+				if (filmsvus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
 					for (int k = 0; k < database.getMedias().get(j).getGenre().length; k++) {
 						if (!genres.isEmpty()) {
 							for (int l = 0; l < genres.size(); l++) {
-								if (database.getMedias().get(j).getGenre()[k].equals(genres.get(l))) {
+								if (database.getMedias().get(j).getGenre()[k]
+										.equals(genres.get(l))) {
 									dedans = true;
 								} else {
 									dedans = false;
@@ -54,7 +56,8 @@ public class Algorithm {
 							genres.add(database.getMedias().get(j).getGenre()[k]);
 							coefgenres.add(1);
 						} else {
-							indice = genres.indexOf(database.getMedias().get(j).getGenre()[k]);
+							indice = genres.indexOf(database.getMedias().get(j)
+									.getGenre()[k]);
 							System.out.println(indice);
 							coefgenres.set(indice, coefgenres.get(indice) + 1);
 						}
@@ -63,21 +66,26 @@ public class Algorithm {
 			}
 		}
 	}
-	
+
 	/**
-	 * Fonction qui compte le nombre d'apparition des directeurs dans les films vus
+	 * Fonction qui compte le nombre d'apparition des directeurs dans les films
+	 * vus
 	 */
 	public void setCoefficientsDirectors() {
 		int indice;
 		boolean dedans = false;
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(database.getMedias().get(j).getTitle())) {
+				if (filmsvus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
 					if (database.getMedias().get(j).getDirector() != null) {
-						for (int k = 0; k < database.getMedias().get(j).getDirector().length; k++) {
+						for (int k = 0; k < database.getMedias().get(j)
+								.getDirector().length; k++) {
 							if (!directors.isEmpty()) {
 								for (int l = 0; l < directors.size(); l++) {
-									if (database.getMedias().get(j).getDirector()[k].equals(directors.get(l))) {
+									if (database.getMedias().get(j)
+											.getDirector()[k].equals(directors
+											.get(l))) {
 										dedans = true;
 									} else {
 										dedans = false;
@@ -85,11 +93,14 @@ public class Algorithm {
 								}
 							}
 							if (!dedans) {
-								directors.add(database.getMedias().get(j).getDirector()[k]);
+								directors.add(database.getMedias().get(j)
+										.getDirector()[k]);
 								coefdirectors.add(1);
 							} else {
-								indice = directors.indexOf(database.getMedias().get(j).getDirector()[k]);
-								coefdirectors.set(indice, coefdirectors.get(indice) + 1);
+								indice = directors.indexOf(database.getMedias()
+										.get(j).getDirector()[k]);
+								coefdirectors.set(indice,
+										coefdirectors.get(indice) + 1);
 							}
 						}
 					}
@@ -97,7 +108,7 @@ public class Algorithm {
 			}
 		}
 	}
-	
+
 	/**
 	 * Fonction qui compte le nombre d'apparition des acteurs dans les films vus
 	 */
@@ -106,11 +117,14 @@ public class Algorithm {
 		boolean dedans = false;
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(database.getMedias().get(j).getTitle())) {
-					for (int k = 0; k < database.getMedias().get(j).getCasting().length; k++) {
+				if (filmsvus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
+					for (int k = 0; k < database.getMedias().get(j)
+							.getCasting().length; k++) {
 						if (!casting.isEmpty()) {
 							for (int l = 0; l < casting.size(); l++) {
-								if (database.getMedias().get(j).getCasting()[k].equals(casting.get(l))) {
+								if (database.getMedias().get(j).getCasting()[k]
+										.equals(casting.get(l))) {
 									dedans = true;
 								} else {
 									dedans = false;
@@ -118,18 +132,21 @@ public class Algorithm {
 							}
 						}
 						if (!dedans) {
-							casting.add(database.getMedias().get(j).getCasting()[k]);
+							casting.add(database.getMedias().get(j)
+									.getCasting()[k]);
 							coefcasting.add(1);
 						} else {
-							indice = casting.indexOf(database.getMedias().get(j).getCasting()[k]);
-							coefcasting.set(indice, coefcasting.get(indice) + 1);
+							indice = casting.indexOf(database.getMedias()
+									.get(j).getCasting()[k]);
+							coefcasting
+									.set(indice, coefcasting.get(indice) + 1);
 						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Fonction qui calcule la durée moyenne des films vus
 	 */
@@ -138,86 +155,110 @@ public class Algorithm {
 		int cpt = 0;
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsvus.get(i).equals(database.getMedias().get(j).getTitle())) {
+				if (filmsvus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
 					if (database.getMedias().get(j).getDuration() != null) {
-						total = total + database.getMedias().get(j).getDuration();
+						total = total
+								+ database.getMedias().get(j).getDuration();
 						cpt += 1;
 					}
 				}
 			}
 		}
 		if (cpt != 0) {
-			intermediateduration = total/cpt;
+			intermediateduration = total / cpt;
 		}
 	}
-	
+
 	/**
 	 * Fonction qui calcule les compteurs pour chacun des films non vus
-	 * @param poidsgenre : poids des genres dans le calcul
-	 * @param poidsdirector : poids des directeurs dans le calcul
-	 * @param poidscasting : poids des acteurs dans le calcul
-	 * @param duration : si vrai alors on prend en compte la durée des films dans le calcul
+	 * 
+	 * @param poidsgenre
+	 *            : poids des genres dans le calcul
+	 * @param poidsdirector
+	 *            : poids des directeurs dans le calcul
+	 * @param poidscasting
+	 *            : poids des acteurs dans le calcul
+	 * @param duration
+	 *            : si vrai alors on prend en compte la durée des films dans le
+	 *            calcul
 	 */
-	public void setCompteurFilms(int poidsgenre, int poidsdirector, int poidscasting, boolean duration) {
-		//incrémentation du compteur pour les genres
+	public void setCompteurFilms(int poidsgenre, int poidsdirector,
+			int poidscasting, boolean duration) {
+		// incrémentation du compteur pour les genres
 		for (int i = 0; i < filmsPasVus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsPasVus.get(i).equals(database.getMedias().get(j).getTitle())) {
+				if (filmsPasVus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
 					for (int k = 0; k < database.getMedias().get(j).getGenre().length; k++) {
 						for (int l = 0; l < genres.size(); l++) {
-							if (database.getMedias().get(j).getGenre()[k].equals(genres.get(l))) {
-								cptFilms.set(i, cptFilms.get(i)+poidsgenre*coefgenres.get(l));
+							if (database.getMedias().get(j).getGenre()[k]
+									.equals(genres.get(l))) {
+								cptFilms.set(i, cptFilms.get(i) + poidsgenre
+										* coefgenres.get(l));
 							}
 						}
 					}
 				}
 			}
-			
+
 		}
-		
-		//incrémentation du compteur pour les directors
+
+		// incrémentation du compteur pour les directors
 		for (int i = 0; i < filmsPasVus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsPasVus.get(i).equals(database.getMedias().get(j).getTitle())) {
+				if (filmsPasVus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
 					if (database.getMedias().get(j).getDirector() != null) {
-						for (int k = 0; k < database.getMedias().get(j).getDirector().length; k++) {
+						for (int k = 0; k < database.getMedias().get(j)
+								.getDirector().length; k++) {
 							for (int l = 0; l < directors.size(); l++) {
-								if (database.getMedias().get(j).getDirector()[k].equals(directors.get(l))) {
-									cptFilms.set(i, cptFilms.get(i)+poidsdirector*coefdirectors.get(l));
+								if (database.getMedias().get(j).getDirector()[k]
+										.equals(directors.get(l))) {
+									cptFilms.set(i,
+											cptFilms.get(i) + poidsdirector
+													* coefdirectors.get(l));
 								}
 							}
 						}
 					}
 				}
 			}
-			
+
 		}
-				
-		//incrémentation du compteur pour les castings
+
+		// incrémentation du compteur pour les castings
 		for (int i = 0; i < filmsPasVus.size(); i++) {
 			for (int j = 0; j < database.getMedias().size(); j++) {
-				if (filmsPasVus.get(i).equals(database.getMedias().get(j).getTitle())) {
-					for (int k = 0; k < database.getMedias().get(j).getCasting().length; k++) {
+				if (filmsPasVus.get(i).equals(
+						database.getMedias().get(j).getTitle())) {
+					for (int k = 0; k < database.getMedias().get(j)
+							.getCasting().length; k++) {
 						for (int l = 0; l < casting.size(); l++) {
-							if (database.getMedias().get(j).getCasting()[k].equals(casting.get(l))) {
-								cptFilms.set(i, cptFilms.get(i)+poidscasting*coefcasting.get(l));
+							if (database.getMedias().get(j).getCasting()[k]
+									.equals(casting.get(l))) {
+								cptFilms.set(i, cptFilms.get(i) + poidscasting
+										* coefcasting.get(l));
 							}
 						}
 					}
 				}
 			}
-			
+
 		}
-		
-		//incrémentation du compteur si durée comprise entre +/- la durée moyenne
+
+		// incrémentation du compteur si durée comprise entre +/- la durée
+		// moyenne
 		if (duration) {
 			for (int i = 0; i < filmsPasVus.size(); i++) {
 				for (int j = 0; j < database.getMedias().size(); j++) {
-					if (filmsPasVus.get(i).equals(database.getMedias().get(j).getTitle())) {
+					if (filmsPasVus.get(i).equals(
+							database.getMedias().get(j).getTitle())) {
 						if (database.getMedias().get(j).getDuration() != null) {
-							if (database.getMedias().get(j).getDuration() <= intermediateduration + 15 
-									&& database.getMedias().get(j).getDuration() >= intermediateduration - 15) {
-								cptFilms.set(i, cptFilms.get(i)+1);
+							if (database.getMedias().get(j).getDuration() <= intermediateduration + 15
+									&& database.getMedias().get(j)
+											.getDuration() >= intermediateduration - 15) {
+								cptFilms.set(i, cptFilms.get(i) + 1);
 							}
 						}
 					}
@@ -225,18 +266,23 @@ public class Algorithm {
 			}
 		}
 	}
-	
+
 	/**
 	 * Fonction qui retourne les n films/série les mieux classés
+	 * 
 	 * @param n
-	 * @param type : permet d'afficher les séries ou les films ou les deux
+	 * @param type
+	 *            : permet d'afficher les séries ou les films ou les deux
 	 */
-	public void recommandations(int n, String type) {
+	public ArrayList<String> recommandations(int n, String type) {
+		ArrayList<String> res = new ArrayList<String>();
 		if (type.equals("film")) {
 			for (int i = 0; i < filmsPasVus.size(); i++) {
 				for (int j = 0; j < database.getMedias().size(); j++) {
-					if (filmsPasVus.get(i).equals(database.getMedias().get(j).getTitle())) {
-						if (database.getMedias().get(j).getType().equals(Media.Type.SERIE)) {
+					if (filmsPasVus.get(i).equals(
+							database.getMedias().get(j).getTitle())) {
+						if (database.getMedias().get(j).getType()
+								.equals(Media.Type.SERIE)) {
 							filmsPasVus.remove(i);
 							cptFilms.remove(i);
 						}
@@ -246,8 +292,10 @@ public class Algorithm {
 		} else if (type.equals("série")) {
 			for (int i = 0; i < filmsPasVus.size(); i++) {
 				for (int j = 0; j < database.getMedias().size(); j++) {
-					if (filmsPasVus.get(i).equals(database.getMedias().get(j).getTitle())) {
-						if (database.getMedias().get(j).getType().equals(Media.Type.FILM)) {
+					if (filmsPasVus.get(i).equals(
+							database.getMedias().get(j).getTitle())) {
+						if (database.getMedias().get(j).getType()
+								.equals(Media.Type.FILM)) {
 							filmsPasVus.remove(i);
 							cptFilms.remove(i);
 						}
@@ -266,10 +314,14 @@ public class Algorithm {
 					max = cptFilms.get(j);
 				}
 			}
-			System.out.println("Le "+(i+1)+"ème " +type +" recommandé est : "+filmsPasVus.get(indiceMax)+" avec un score de "+max);
+			System.out.println("Le " + (i + 1) + "ème " + type
+					+ " recommandé est : " + filmsPasVus.get(indiceMax)
+					+ " avec un score de " + max);
+			res.add(filmsPasVus.get(indiceMax));
 			cptFilms.remove(indiceMax);
 			filmsPasVus.remove(indiceMax);
 		}
+		return res;
+
 	}
-	
 }
