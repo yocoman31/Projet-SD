@@ -68,20 +68,20 @@ public class Database extends LinkedList<Media> {
 			while (synopsi.equals(""))
 				synopsi = scanner.nextLine();
 			synopsi = Utils.eraseSpace(synopsi);
-			String director[] = null, casting[] = null, genre[] = null;
+			String directors[] = null, casting[] = null, genre[] = null;
 			do {
 				System.out.println("On boucle");
 				tampon = scanner.nextLine();
 				if (tampon.startsWith("Director")) {
-					director = new String[Utils.countOccurence(tampon, ',')];
+					directors = new String[Utils.countOccurence(tampon, ',')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
-					for (int i = 0; i < director.length; i++) {
+					for (int i = 0; i < directors.length; i++) {
 						if (tampon.indexOf(',') != -1) {
-							director[i] = Utils.eraseSpace(tampon.substring(0,
+							directors[i] = Utils.eraseSpace(tampon.substring(0,
 									tampon.indexOf(',')));
 							tampon.substring(tampon.indexOf(',') + 1);
 						} else
-							director[i] = Utils.eraseSpace(tampon);
+							directors[i] = Utils.eraseSpace(tampon);
 					}
 				} else if (tampon.startsWith("With")) {
 					casting = new String[Utils.countOccurence(tampon, ',')];
@@ -118,9 +118,9 @@ public class Database extends LinkedList<Media> {
 				}
 			} while (!tampon.equals(""));
 			this.add(new Media(titre, Integer.parseInt(annee), type, synopsi,
-					director, casting, genre, temps));
-			for (int i = 0; director != null && i < director.length; i++)
-				System.out.println("-" + director[i] + "-");
+					directors, casting, genre, temps));
+			for (int i = 0; directors != null && i < directors.length; i++)
+				System.out.println("-" + directors[i] + "-");
 			for (int i = 0; casting != null && i < casting.length; i++)
 				System.out.println("-" + casting[i] + "-");
 			for (int i = 0; genre != null && i < genre.length; i++)

@@ -38,11 +38,11 @@ public class Algorithm {
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.size(); j++) {
 				if (filmsvus.get(i).equals(database.get(j).getTitle())) {
-					for (int k = 0; k < database.get(j).getGenre().length; k++) {
+					for (int k = 0; k < database.get(j).getGenres().length; k++) {
 						if (!genres.isEmpty()) {
 							for (int l = 0; l < genres.size(); l++) {
-								if (database.get(j).getGenre()[k].equals(genres
-										.get(l))) {
+								if (database.get(j).getGenres()[k]
+										.equals(genres.get(l))) {
 									dedans = true;
 								} else {
 									dedans = false;
@@ -50,11 +50,11 @@ public class Algorithm {
 							}
 						}
 						if (!dedans) {
-							genres.add(database.get(j).getGenre()[k]);
+							genres.add(database.get(j).getGenres()[k]);
 							coefgenres.add(1);
 						} else {
 							indice = genres
-									.indexOf(database.get(j).getGenre()[k]);
+									.indexOf(database.get(j).getGenres()[k]);
 							System.out.println(indice);
 							coefgenres.set(indice, coefgenres.get(indice) + 1);
 						}
@@ -74,11 +74,11 @@ public class Algorithm {
 		for (int i = 0; i < filmsvus.size(); i++) {
 			for (int j = 0; j < database.size(); j++) {
 				if (filmsvus.get(i).equals(database.get(j).getTitle())) {
-					if (database.get(j).getDirector() != null) {
-						for (int k = 0; k < database.get(j).getDirector().length; k++) {
+					if (database.get(j).getDirectors() != null) {
+						for (int k = 0; k < database.get(j).getDirectors().length; k++) {
 							if (!directors.isEmpty()) {
 								for (int l = 0; l < directors.size(); l++) {
-									if (database.get(j).getDirector()[k]
+									if (database.get(j).getDirectors()[k]
 											.equals(directors.get(l))) {
 										dedans = true;
 									} else {
@@ -87,11 +87,12 @@ public class Algorithm {
 								}
 							}
 							if (!dedans) {
-								directors.add(database.get(j).getDirector()[k]);
+								directors
+										.add(database.get(j).getDirectors()[k]);
 								coefdirectors.add(1);
 							} else {
 								indice = directors.indexOf(database.get(j)
-										.getDirector()[k]);
+										.getDirectors()[k]);
 								coefdirectors.set(indice,
 										coefdirectors.get(indice) + 1);
 							}
@@ -177,9 +178,9 @@ public class Algorithm {
 		for (int i = 0; i < filmsPasVus.size(); i++) {
 			for (int j = 0; j < database.size(); j++) {
 				if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
-					for (int k = 0; k < database.get(j).getGenre().length; k++) {
+					for (int k = 0; k < database.get(j).getGenres().length; k++) {
 						for (int l = 0; l < genres.size(); l++) {
-							if (database.get(j).getGenre()[k].equals(genres
+							if (database.get(j).getGenres()[k].equals(genres
 									.get(l))) {
 								cptFilms.set(i, cptFilms.get(i) + poidsgenre
 										* coefgenres.get(l));
@@ -195,10 +196,10 @@ public class Algorithm {
 		for (int i = 0; i < filmsPasVus.size(); i++) {
 			for (int j = 0; j < database.size(); j++) {
 				if (filmsPasVus.get(i).equals(database.get(j).getTitle())) {
-					if (database.get(j).getDirector() != null) {
-						for (int k = 0; k < database.get(j).getDirector().length; k++) {
+					if (database.get(j).getDirectors() != null) {
+						for (int k = 0; k < database.get(j).getDirectors().length; k++) {
 							for (int l = 0; l < directors.size(); l++) {
-								if (database.get(j).getDirector()[k]
+								if (database.get(j).getDirectors()[k]
 										.equals(directors.get(l))) {
 									cptFilms.set(i,
 											cptFilms.get(i) + poidsdirector
