@@ -152,6 +152,9 @@ public class MediaAlgorithm {
 			castingWeight = 1;
 		if (directorWeight == null)
 			directorWeight = 1;
+		if (type == null) {
+			type = Media.Type.NONE;
+		}
 		this.computeCoefficients();
 		this.computeFilmsRate();
 		ArrayList<Media> res = new ArrayList<Media>();
@@ -159,8 +162,8 @@ public class MediaAlgorithm {
 			int max = 0;
 			Media mMax = null;
 			for (Media m : filmsNotSeen.keySet()) {
-				// TODO: prise en compte des types
-				if (filmsNotSeen.get(m) > max && !res.contains(m)) {
+				if (filmsNotSeen.get(m) > max && !res.contains(m)
+						&& (type == Media.Type.NONE || type == m.getType())) {
 					max = filmsNotSeen.get(m);
 					mMax = m;
 				}

@@ -155,7 +155,9 @@ public class View extends JFrame {
 					}
 					recommandationList.updateUI();
 				} else {
-					// TODO: popup d'erreur :) ou griser bouton?
+					JOptionPane.showMessageDialog(rootPane,
+							"Have you never seen a film ?", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -206,7 +208,7 @@ public class View extends JFrame {
 		addDatabaseItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JFileChooser dialogue = new JFileChooser();
-				int res = dialogue.showOpenDialog(rootPane);
+				dialogue.showOpenDialog(rootPane);
 				dialogue.setName("Select the database file");
 				if (dialogue.getSelectedFile() != null) {
 					try {
@@ -231,11 +233,8 @@ public class View extends JFrame {
 		fileMenu.add(addDatabaseItem);
 		fileMenu.add(closeItem);
 
-		JMenu aboutMenu = new JMenu("About"); // TODO: FAIRE UN POPUP
-
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileMenu);
-		menuBar.add(aboutMenu);
 
 		super.setJMenuBar(menuBar);
 	}

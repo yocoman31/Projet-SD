@@ -1,6 +1,5 @@
 package filmfinder;
 
-//TODO: type of media
 //TODO: JSON
 //TODO: menuBAR pour selectionner % des params
 import java.io.FileNotFoundException;
