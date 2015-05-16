@@ -6,10 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,38 +21,180 @@ import javax.swing.JTextPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+//TODO: afficher un screen de l'affiche
+
+/**
+ * Gui of the program
+ * 
+ * @author Yoni Levy & Romain Tissier
+ *
+ */
 public class View extends JFrame {
 	private static final long serialVersionUID = -4074747536669981312L;
-	private JList<Media> lis;
-	ArrayListModel T4;
-	ArrayListModel filmsVus;
-	JList<Media> listfv;
-	ArrayListModel filmsres;
-	JList<String> listRes;
-	Database database;
-	JButton add, remove;
-	private JPanel pan = new JPanel();
-	JTextPane titre1;
-	JScrollPane titre1pan;
 
-	public View(Database database) {
+	/**
+	 * Graphics components
+	 */
+	private JList<Media> filmsList, filmsSeenList, recommandationList;
+	JTextPane informations;
+	private JButton addButton, removeButton, findButton;
+
+	/**
+	 * Model variables
+	 */
+	private Database database;
+	private MediaAlgorithm mediaAlgorithm;
+
+	/**
+	 * Constructor initializing the GUI
+	 * 
+	 * @param database
+	 *            : database used by the GUI
+	 * @param mediaAlgorithm
+	 *            : algorithm used by the GUI
+	 */
+	public View(Database database, MediaAlgorithm mediaAlgorithm) {
 		super("Film Finder");
-		GridLayout lay = new GridLayout(2, 3);
-		pan = new JPanel();
-		pan.setLayout(lay);
 		this.database = database;
+		this.mediaAlgorithm = mediaAlgorithm;
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setJMenuBar();
+		this.initList();
 
-		JMenuBar menuBar = new JMenuBar();
-		JMenu test1 = new JMenu("Fichier");
+		informations = new JTextPane();
+		informations.setContentType("text/html");
+		informations.setOpaque(false);
+		informations.setText("<h2>Informations</h2>");
 
-		// TODO: FAIRE UN POPUP
-		JMenu test2 = new JMenu("A propos");
+		JPanel panButonAdd = new JPanel();
+		JPanel panButonRemove = new JPanel();
+		panButonAdd.setLayout(new GridBagLayout());
+		panButonRemove.setLayout(new GridBagLayout());
+		addButton = new JButton("   Add ->   ");
+		removeButton = new JButton("<- Remove");
+		panButonAdd.add(addButton);
+		panButonRemove.add(removeButton);
 
-		View vu = this;
-		JMenuItem addDatabaseItem = new JMenuItem("Add text database");
+		JPanel panButon = new JPanel();
+		panButon.setLayout(new GridLayout(2, 1));
+		panButon.add(panButonAdd);
+		panButon.add(panButonRemove);
+		JPanel panbtngo = new JPanel();
+		JPanel panfind = new JPanel();
+		panfind.setLayout(new GridBagLayout());
+		findButton = new JButton("Find :");
+		panbtngo.add(findButton);
+		panfind.add(panbtngo);
 
+		JPanel mainPanel = new JPanel();
+		GridLayout mainLayout = new GridLayout(2, 3);
+		mainPanel.setLayout(mainLayout);
+		mainPanel.add(new JScrollPane(filmsList));
+		mainPanel.add(panButon);
+		mainPanel.add(new JScrollPane(filmsSeenList));
+		mainPanel.add(new JScrollPane(informations));
+		mainPanel.add(panfind);
+		mainPanel.add(new JScrollPane(recommandationList));
+		this.setContentPane(mainPanel);
+
+		this.initAction();
+		this.setVisible(true);
+
+	}
+
+	/**
+	 * Method initializing action on button
+	 */
+	private void initAction() {
+		filmsList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (filmsList.isSelectionEmpty() == false) {
+					Media t = (Media) database.getFilmsNotSeen().get(
+							filmsList.getSelectedIndex());
+					informations.setText(t.getInfoHtml());
+				}
+			}
+		});
+		filmsSeenList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (filmsSeenList.isSelectionEmpty() == false) {
+					Media t = (Media) database.getFilmsSeen().get(
+							filmsSeenList.getSelectedIndex());
+					System.out.println(t.getInfoHtml());
+					informations.setText(t.getInfoHtml());
+
+				}
+			}
+		});
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (filmsList.isSelectionEmpty() == false) {
+					for (Media m : filmsList.getSelectedValuesList()) {
+						if (!database.getFilmsSeen().contains(m)) {
+							database.getFilmsSeen().add(m);
+							database.getFilmsNotSeen().remove(m);
+						}
+					}
+					filmsSeenList.updateUI();
+					filmsList.clearSelection();
+					filmsList.updateUI();
+				}
+			}
+		});
+		findButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!database.getFilmsSeen().isEmpty()) {
+					ArrayList<Media> resa = mediaAlgorithm.execute(10);
+					recommandationList.setEnabled(true);
+					for (int i = database.getRecommendedFilms().size() - 1; i >= 0; i--) {
+						database.getRecommendedFilms().remove(i);
+					}
+					for (Media m : resa) {
+						database.getRecommendedFilms().add(m);
+					}
+					recommandationList.updateUI();
+				} else {
+					// TODO: popup d'erreur :) ou griser bouton?
+				}
+			}
+		});
+		removeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (filmsSeenList.isSelectionEmpty() == false) {
+					for (Media m : filmsSeenList.getSelectedValuesList()) {
+						database.getFilmsNotSeen().add(m);
+						database.getFilmsSeen().remove(m);
+					}
+					filmsSeenList.clearSelection();
+					filmsSeenList.updateUI();
+					database.getFilmsNotSeenModel().sort();
+					filmsList.updateUI();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Method initializing the model of the GUI
+	 */
+	private void initList() {
+		filmsList = new JList<Media>(database.getFilmsNotSeenModel());
+		database.getFilmsNotSeenModel().sort();
+		filmsSeenList = new JList<Media>(database.getFilmsSeenModel());
+		recommandationList = new JList<Media>(
+				database.getRecommendedFilmsModel());
+		recommandationList.setEnabled(false);
+		Media defaultList = new Media();
+		defaultList
+				.setTitle("No recommandation, \nPlease click \"find\" to find new film");
+		database.getRecommendedFilms().add(defaultList);
+	}
+
+	/**
+	 * Method initializing the menu bar
+	 */
+	private void setJMenuBar() {
 		JMenuItem closeItem = new JMenuItem("Close");
 		closeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -63,98 +202,11 @@ public class View extends JFrame {
 			}
 		});
 
-		test1.add(addDatabaseItem);
-		test1.add(closeItem);
-		menuBar.add(test1);
-		menuBar.add(test2);
-		this.setJMenuBar(menuBar);
-
-		T4 = new ArrayListModel();
-		lis = new JList<Media>(T4);
-		for (Media m : database) {
-			T4.add(m);
-		}
-		T4.sort();
-
-		pan.add(new JScrollPane(lis));
-
-		JPanel panButon1 = new JPanel();
-		JPanel panButon2 = new JPanel();
-		panButon1.setLayout(new GridBagLayout());
-		panButon2.setLayout(new GridBagLayout());
-		add = new JButton("   Add ->   ");
-		add.setSize(100, 50);
-		remove = new JButton("<- Remove");
-
-		// add.setMaximumSize(new Dimension(50, 50));
-		panButon1.add(add);
-		panButon2.add(remove);
-		JPanel panButon = new JPanel();
-		panButon.setLayout(new GridLayout(2, 1));
-		panButon.add(panButon1);
-		panButon.add(panButon2);
-		pan.add(panButon);
-		// lis = new JList<String>();
-
-		filmsVus = new ArrayListModel();
-		listfv = new JList<Media>(filmsVus);
-
-		filmsres = new ArrayListModel();
-		filmsres.add("No recommandation yet");
-		filmsres.add("Please click \"find\" to find new film");
-		listRes = new JList<String>(filmsres);
-		listRes.setEnabled(false);
-
-		pan.add(new JScrollPane(listfv));
-		titre1 = new JTextPane();
-		titre1.setContentType("text/html");
-		titre1.setOpaque(false);
-		titre1.setText("<h2>Informations</h2>");
-		titre1pan = new JScrollPane(titre1);
-		// titre1pan.add(titre1);
-		pan.add(titre1pan);
-
-		JPanel panbtngo = new JPanel();
-		JPanel panin = new JPanel();
-		panin.setLayout(new GridBagLayout());
-		// panbtngo.setLayout(new GridLayout());
-		JButton btngo = new JButton("Find :");
-		panbtngo.add(btngo);
-		panin.add(panbtngo);
-		pan.add(panin);
-
-		this.setContentPane(pan);
-
-		pan.add(new JScrollPane(listRes));
-
-		lis.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (lis.isSelectionEmpty() == false) {
-					Media t = (Media) T4.getElementAt(lis.getSelectedIndex());
-					System.out.println(t.getInfo());
-					titre1.setText(t.getInfo());
-				}
-			}
-		});
-		listfv.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (listfv.isSelectionEmpty() == false) {
-					Media t = (Media) filmsVus.getElementAt(listfv
-							.getSelectedIndex());
-					System.out.println(t.getInfo());
-					titre1.setText(t.getInfo());
-
-				}
-				// System.out.println(t.getInfo());
-				// titre1.setText(t.getInfo());
-				// titre1.setSelectionStart(0);
-				// listfv.updateUI();
-			}
-		});
+		JMenuItem addDatabaseItem = new JMenuItem("Add database");
 		addDatabaseItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JFileChooser dialogue = new JFileChooser();
-				int res = dialogue.showOpenDialog(vu);
+				int res = dialogue.showOpenDialog(rootPane);
 				dialogue.setName("Select the database file");
 				if (dialogue.getSelectedFile() != null) {
 					try {
@@ -162,135 +214,29 @@ public class View extends JFrame {
 								.endsWith(".txt")) {
 							database.loadDatabaseFile(dialogue
 									.getSelectedFile().getPath());
-							update();
 						} else
-							JOptionPane.showMessageDialog(vu,
+							JOptionPane.showMessageDialog(rootPane,
 									"This is not a database!", "Error",
 									JOptionPane.ERROR_MESSAGE);
 					} catch (FileNotFoundException e) {
-						JOptionPane.showMessageDialog(vu, "File not found!",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(rootPane,
+								"File not found!", "Error",
+								JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		});
-		add.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (lis.isSelectionEmpty() == false) {
-					// List<Media> listinter=lis.getSelectedValuesList()
-					for (Media m : lis.getSelectedValuesList()) {
-						if (!filmsVus.contains(m)) {
-							filmsVus.add(m);
-							T4.remove(m);
-						}
-					}
-					listfv.updateUI();
-					lis.clearSelection();
-					lis.updateUI();
-				}
-			}
-		});
-		btngo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (filmsVus.getSize() > 0) {
-					ArrayList<String> films = new ArrayList<String>();
-					for (int i = 0; i < filmsVus.size(); i++) {
-						films.add(((Media) filmsVus.getElementAt(i)).getTitle());
-					}
-					Algorithm algo = new Algorithm(films, database);
 
-					int poidsgenre = 1;
-					int poidscasting = 1;
-					int poidsdirector = 1;
-					boolean duration = false;
+		JMenu fileMenu = new JMenu("File");
+		fileMenu.add(addDatabaseItem);
+		fileMenu.add(closeItem);
 
-					algo.setCoefficientsGenres();
-					algo.setCoefficientsCasting();
-					algo.setCoefficientsDirectors();
-					algo.setCoefficientsDuration();
+		JMenu aboutMenu = new JMenu("About"); // TODO: FAIRE UN POPUP
 
-					algo.setCompteurFilms(poidsgenre, poidsdirector,
-							poidscasting, duration);
-					ArrayList<String> resa = algo.recommandations(10, "tout");
-					listRes.setEnabled(true);
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(fileMenu);
+		menuBar.add(aboutMenu);
 
-					for (int i = filmsres.getSize() - 1; i >= 0; i--) {
-						filmsres.remove(i);
-					}
-
-					for (String s : resa) {
-						filmsres.add(s);
-					}
-					listRes.updateUI();
-
-				} else {
-					// TODO: popup d'erreur :) ou griser bouton?
-				}
-			}
-		});
-		remove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (listfv.isSelectionEmpty() == false) {
-					for (Media m : listfv.getSelectedValuesList()) {
-						T4.add(m);
-						filmsVus.remove(m);
-					}
-					listfv.clearSelection();
-					listfv.updateUI();
-					T4.sort();
-					lis.updateUI();
-				}
-			}
-		});
-
-		this.setVisible(true);
-
+		super.setJMenuBar(menuBar);
 	}
-
-	public void update() {
-		for (Media m : database) {
-			T4.add(m);
-		}
-		T4.sort();
-
-		lis.updateUI();
-	}
-}
-
-class ArrayListModel extends AbstractListModel {
-
-	private List data = new ArrayList();
-
-	public boolean contains(Object o) {
-		return data.contains(o);
-	}
-
-	public Object getElementAt(int index) {
-		return this.data.get(index);
-	}
-
-	public int getSize() {
-		return this.data.size();
-	}
-
-	public void remove(Object o) {
-		data.remove(o);
-	}
-
-	public void remove(int index) {
-		data.remove(index);
-	}
-
-	public void add(Object element) {
-		this.data.add(element);
-	}
-
-	public int size() {
-		return this.data.size();
-	}
-
-	public void sort() {
-		Collections.sort(this.data);
-	}
-
 }

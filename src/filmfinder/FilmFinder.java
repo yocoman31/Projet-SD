@@ -1,5 +1,8 @@
 package filmfinder;
 
+//TODO: type of media
+//TODO: JSON
+//TODO: menuBAR pour selectionner % des params
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -10,7 +13,11 @@ import java.util.ArrayList;
  * the algorithm<br>
  * --director-weight=[number] or -dw=[number] affect a weight to the director
  * for the algorithm <br>
- * --duration-on or -d active the duration compute in the algorithm<br>
+ * --type=[NONE|SERIES|FILMS] or -t=[NONE|SERIES|FILMS]
+ * --duration-weight=[weight] or -durw=[weight] active the duration compute in
+ * the algorithm<br>
+ * --duration-shift=[number] or -durs=[number] set the duration shift to compute
+ * the algorithm <br>
  * --file or -f [databasePath] to load the database file <br>
  * --gender-weight=[number] or -gw=[number] affect a weight to the gender for
  * the algorithm<br>
@@ -21,17 +28,15 @@ import java.util.ArrayList;
  * @author Yoni Levy & Romain Tissier
  *
  */
-public class Filmfinder {
+public class FilmFinder {
+
 	public static void main(String[] args) {
 		/* Create the database and initialize temporary variable */
 		Database database = new Database();
-		Integer genderWeight = null, castingWeight = null, directorWeight = null;
-		Boolean duration = null;
-		// TODO: vérifier la structure
+		MediaAlgorithm mediaAlgorithm = new MediaAlgorithm(database);
 		ArrayList<String> filmSeen = new ArrayList<String>();
-
 		boolean cli = true;
-		/* Check arguments: */
+		/* Parse arguments: */
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-f") || args[i].equals("--file")) {
 				/* Adding a database file */
@@ -61,18 +66,37 @@ public class Filmfinder {
 						.println("Welcom to FindFinder, this programme helps you to find a film \n(default mode) or in graphic mode. You can run it with different option:\n--file or -f [databasePath] to load the database file\n--seen or -s [filmTitle] to add a film you've already seen\n--graphic or -g to open the program in a graphic mode\n--help or -h to see this message");
 			} else if (args[i].startsWith("-gw=")
 					|| args[i].startsWith("--gender-weight=")) {
-				genderWeight = Integer.parseInt(args[i].substring(args[i]
-						.indexOf("=") + 1));
+				mediaAlgorithm.setGenresWeight(Integer.parseInt(args[i]
+						.substring(args[i].indexOf("=") + 1)));
 			} else if (args[i].startsWith("-cw=")
 					|| args[i].startsWith("--casting-weight=")) {
-				castingWeight = Integer.parseInt(args[i].substring(args[i]
-						.indexOf("=") + 1));
+				mediaAlgorithm.setCastingWeight(Integer.parseInt(args[i]
+						.substring(args[i].indexOf("=") + 1)));
 			} else if (args[i].startsWith("-dw=")
 					|| args[i].startsWith("--director-weight=")) {
-				directorWeight = Integer.parseInt(args[i].substring(args[i]
-						.indexOf("=") + 1));
-			} else if (args[i].equals("-d") || args[i].equals("--duration-on")) {
-				duration = true;
+				mediaAlgorithm.setDirectorWeight(Integer.parseInt(args[i]
+						.substring(args[i].indexOf("=") + 1)));
+			} else if (args[i].startsWith("-durw=")
+					|| args[i].startsWith("--duration-weight=")) {
+				mediaAlgorithm.setDurationShift(Integer.parseInt(args[i]
+						.substring(args[i].indexOf("=") + 1)));
+			} else if (args[i].startsWith("--duration-shift=")
+					|| args[i].startsWith("-durs=[number]")) {
+				mediaAlgorithm.setDurationWeight(Integer.parseInt(args[i]
+						.substring(args[i].indexOf("=") + 1)));
+			} else if (args[i].startsWith("--type=")
+					|| args[i].startsWith("-type=")) {
+				String type = args[i].substring(args[i].indexOf("=") + 1);
+				if (type == "NONE") {
+					mediaAlgorithm.setType(Media.Type.NONE);
+				} else if (type == "SERIES") {
+					mediaAlgorithm.setType(Media.Type.SERIE);
+				} else if (type == "FILMS") {
+					mediaAlgorithm.setType(Media.Type.FILM);
+				} else {
+					System.err.println("Le type " + type + "est inconnu!");
+					mediaAlgorithm.setType(Media.Type.NONE);
+				}
 			} else {
 				System.err
 						.println("\""
@@ -80,16 +104,28 @@ public class Filmfinder {
 								+ "\" is not an argument! Please read help using --help");
 			}
 		}
+		/* Check the film and the number of film seen */
+		database.addFilmsSeen(filmSeen);
 		/* Run the program in correct mode */
 		if (cli) {
-			if (database.isEmpty() == true) {
+			/* Check the database */
+			if (database.getFilmsNotSeen().size() < 1) {
 				System.err.println("Error, there is no database selected");
 				System.exit(1);
+			} else if (database.getFilmsNotSeen().isEmpty()) {
+				System.err.println("Error, you've seen every film !");
+				System.exit(1);
+			} else if (database.getFilmsSeen().isEmpty()) {
+				System.err
+						.println("Error, there is no film you've seen in our database");
+				System.exit(1);
 			}
-			Algorithm.execute(filmSeen, database, genderWeight, castingWeight,
-					directorWeight, duration);
+			for (Media m : mediaAlgorithm.execute(10)) {
+				System.out.println("We advise you: " + m.toString());
+			}
 		} else {
-			new View(database);
+			@SuppressWarnings("unused")
+			View vue = new View(database, mediaAlgorithm);
 		}
 	}
 }

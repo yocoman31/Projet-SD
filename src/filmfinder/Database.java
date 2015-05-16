@@ -1,44 +1,114 @@
-//TODO: Implémenter le JSON
 package filmfinder;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import filmfinder.Media.Type;
 
 /**
- * Class representing a film database
+ * Class use as a model of the database
  * 
  * @author Yoni Levy & Romain Tissier
  *
  */
-public class Database extends LinkedList<Media> {
-
-	private static final long serialVersionUID = -5768949048626790295L;
+public class Database {
 
 	/**
-	 * Constructor initializing a database
-	 * 
-	 * @param file
-	 *            : path of the file containing a list of film
-	 * @throws FileNotFoundException
+	 * Lists used as model
 	 */
-	public Database(String file) throws FileNotFoundException {
-		super();
-		this.loadDatabaseFile(file);
-	}
+	private ArrayListModel filmsNotSeen, filmsSeen, recommendedFilms;
 
 	/**
-	 * Constructor initializing the superclass
+	 * Constructor initializing the database Model
+	 * 
+	 * @param medias
+	 *            : medias to copy in the database
 	 */
 	public Database() {
 		super();
+		filmsNotSeen = new ArrayListModel();
+		filmsSeen = new ArrayListModel();
+		recommendedFilms = new ArrayListModel();
 	}
 
 	/**
-	 * Methode use to load a database file and fill the Database Object
+	 * Method adding film seen by the user
+	 * 
+	 * @param films
+	 *            : films seen by the user
+	 */
+	public void addFilmsSeen(ArrayList<String> films) {
+		if (!films.isEmpty()) {
+			for (String s : films) {
+				boolean test = false;
+				for (Media m : filmsNotSeen.getData()) {
+					if (s.equals(m.getTitle())) {
+						filmsSeen.add(m);
+						filmsNotSeen.remove(m);
+						test = true;
+						break;
+					}
+				}
+				if (!test)
+					System.err.println("Error, there is no film called \"" + s
+							+ "\" in the database");
+			}
+		}
+	}
+
+	/**
+	 * Getter returning the films seen by the user
+	 * 
+	 * @return films seen by the user
+	 */
+	public ArrayListModel getFilmsSeenModel() {
+		return filmsSeen;
+	}
+
+	public ArrayList<Media> getFilmsSeen() {
+		return filmsSeen.getData();
+	}
+
+	/**
+	 * Getter returning the list of recommended films
+	 * 
+	 * @return list of recommended films
+	 */
+	public ArrayListModel getRecommendedFilmsModel() {
+		return recommendedFilms;
+	}
+
+	/**
+	 * Getter returning the list of recommended films
+	 * 
+	 * @return list of recommended films
+	 */
+	public ArrayList<Media> getRecommendedFilms() {
+		return recommendedFilms.getData();
+	}
+
+	/**
+	 * Getter returning the list of film not seen by the user
+	 * 
+	 * @return list of film not seen by the user
+	 */
+	public ArrayListModel getFilmsNotSeenModel() {
+		return filmsNotSeen;
+	}
+
+	/**
+	 * Getter returning the list of film not seen by the user
+	 * 
+	 * @return list of film not seen by the user
+	 */
+	public ArrayList<Media> getFilmsNotSeen() {
+		return filmsNotSeen.getData();
+	}
+
+	/**
+	 * Method use to load a database file and fill the Database Object
 	 * 
 	 * @param file
 	 *            : path of the file containing a list of film
@@ -70,7 +140,6 @@ public class Database extends LinkedList<Media> {
 			synopsi = Utils.eraseSpace(synopsi);
 			String directors[] = null, casting[] = null, genre[] = null;
 			do {
-				System.out.println("On boucle");
 				tampon = scanner.nextLine();
 				if (tampon.startsWith("Director")) {
 					directors = new String[Utils.countOccurence(tampon, ',')];
@@ -79,7 +148,7 @@ public class Database extends LinkedList<Media> {
 						if (tampon.indexOf(',') != -1) {
 							directors[i] = Utils.eraseSpace(tampon.substring(0,
 									tampon.indexOf(',')));
-							tampon.substring(tampon.indexOf(',') + 1);
+							tampon = tampon.substring(tampon.indexOf(',') + 1);
 						} else
 							directors[i] = Utils.eraseSpace(tampon);
 					}
@@ -87,7 +156,6 @@ public class Database extends LinkedList<Media> {
 					casting = new String[Utils.countOccurence(tampon, ',')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < casting.length; i++) {
-						System.out.println("Occurence: " + i);
 						if (tampon.indexOf(',') != -1) {
 							casting[i] = Utils.eraseSpace(tampon.substring(0,
 									tampon.indexOf(',')));
@@ -99,7 +167,6 @@ public class Database extends LinkedList<Media> {
 					genre = new String[Utils.countOccurence(tampon, '|')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < genre.length; i++) {
-						System.out.println("Occurence: " + i);
 						if (tampon.indexOf('|') != -1) {
 							genre[i] = Utils.eraseSpace(tampon.substring(0,
 									tampon.indexOf('|')));
@@ -117,16 +184,9 @@ public class Database extends LinkedList<Media> {
 					}
 				}
 			} while (!tampon.equals(""));
-			this.add(new Media(titre, Integer.parseInt(annee), type, synopsi,
-					directors, casting, genre, temps));
-			for (int i = 0; directors != null && i < directors.length; i++)
-				System.out.println("-" + directors[i] + "-");
-			for (int i = 0; casting != null && i < casting.length; i++)
-				System.out.println("-" + casting[i] + "-");
-			for (int i = 0; genre != null && i < genre.length; i++)
-				System.out.println("-" + genre[i] + "-");
+			filmsNotSeen.add(new Media(titre, Integer.parseInt(annee), type,
+					synopsi, directors, casting, genre, temps));
 		}
 		scanner.close();
 	}
-
 }

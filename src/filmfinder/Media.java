@@ -13,7 +13,7 @@ public class Media implements Comparable<Media> {
 	 *
 	 */
 	public static enum Type {
-		SERIE, FILM;
+		SERIE, FILM, NONE;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Media implements Comparable<Media> {
 	public Media() {
 		this.title = null;
 		this.year = null;
-		this.type = null;
+		this.type = Media.Type.NONE;
 		this.synopsis = null;
 		this.directors = null;
 		this.casting = null;
@@ -244,61 +244,62 @@ public class Media implements Comparable<Media> {
 		return duration;
 	}
 
+	/**
+	 * Method setting the duration of the media
+	 * 
+	 * @param duration
+	 *            : (new) duration
+	 */
 	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
+	/**
+	 * Method returning a string representing the media
+	 * 
+	 * @return String representing the media
+	 */
 	public String toString() {
-		String res = this.title + " (" + this.year;
-		if (this.type == Media.Type.SERIE)
-			res = res + " , TV Series";
-		res = res + ")";
+		String res = this.title;
+		if (this.year != null) {
+			res += "(" + this.year;
+			if (this.type == Media.Type.SERIE)
+				res += " , TV Series";
+			res += ")";
+		}
 		return res;
 	}
 
-	public String getInfo() {
+	/**
+	 * Method returning a HTML text representing the media
+	 * 
+	 * @return the formated information
+	 */
+	public String getInfoHtml() {
 		String res = "<html<h2>Informations:</h2><b>Titre:</b> " + this.title
 				+ "<br>";
-
 		if (year != null)
-			res += "<b>Année: </b>" + year + "<br>";
+			res += "<b>Year: </b>" + year + "<br>";
 		if (type == Media.Type.FILM)
 			res += "<b>Type:</b> Film<br>";
 		else
 			res += "<b>Type:</b> Serie<br>";
-		res += "<b>Synopsy:</b> " + synopsis + "<br>";
-		if (directors != null) {
-			res += "<b>Réalisateur(s): </b>";
-			for (int i = 0; i < directors.length; i++) {
-				res += directors[i];
-				if (i != directors.length - 1)
-					res += ", ";
-			}
-			res += "<br>";
-		}
-		if (casting != null) {
-			res += "<b>Casting :</b>";
-			for (int i = 0; i < casting.length; i++) {
-				res += casting[i];
-				if (i != casting.length - 1)
-					res += ", ";
-			}
-			res += "<br>";
-		}
-		if (genres != null) {
-			res += "<b>Genre :</b>";
-			for (int i = 0; i < genres.length; i++) {
-				res += genres[i];
-				if (i != genres.length - 1)
-					res += ", ";
-			}
-			res += "<br>";
-		}
+		res += "<b>Synopsis:</b> " + synopsis + "<br>";
+		if (directors != null)
+			res += "<b>Directors(s): </b>" + Utils.formatWithComma(directors)
+					+ "<br>";
+		if (casting != null)
+			res += "<b>Casting :</b>" + Utils.formatWithComma(casting) + "<br>";
+		if (genres != null)
+			res += "<b>Genre(s) :</b>" + Utils.formatWithComma(genres) + "<br>";
 		if (duration != null)
-			res += "<b>Durée: </b>" + duration + "<br>";
+			res += "<b>Duration: </b>" + duration + "<br>";
 		return res + "</html>";
 	}
 
+	/**
+	 * Implementation of the method compareTo()
+	 */
 	public int compareTo(Media m) {
 		return this.title.compareToIgnoreCase(m.title);
 	}
