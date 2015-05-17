@@ -213,7 +213,9 @@ public class View extends JFrame {
 				if (dialogue.getSelectedFile() != null) {
 					try {
 						if (dialogue.getSelectedFile().getPath()
-								.endsWith(".txt")) {
+								.endsWith(".txt")
+								|| dialogue.getSelectedFile().getPath()
+										.endsWith(".json")) {
 							database.loadDatabaseFile(dialogue
 									.getSelectedFile().getPath());
 						} else
@@ -226,6 +228,7 @@ public class View extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					}
 				}
+				filmsList.updateUI();
 			}
 		});
 

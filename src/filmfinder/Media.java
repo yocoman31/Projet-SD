@@ -1,5 +1,9 @@
 package filmfinder;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 /**
  * Class representing a media in the database
  * 
@@ -302,5 +306,31 @@ public class Media implements Comparable<Media> {
 	 */
 	public int compareTo(Media m) {
 		return this.title.compareToIgnoreCase(m.title);
+	}
+
+	public JsonObject toJson() {
+		JsonObjectBuilder mediaBuilder = Json.createObjectBuilder();
+		mediaBuilder.add("Title", title);
+
+		if (type == Type.SERIE)
+			mediaBuilder.add("Type", "SERIE");
+		else if (type == Type.FILM)
+			mediaBuilder.add("Type", "FILM");
+		else
+			mediaBuilder.add("Type", "NONE");
+		if (year != null)
+			mediaBuilder.add("Year", year);
+		if (synopsis != null)
+			mediaBuilder.add("Synopsis", synopsis);
+		if (directors != null)
+			mediaBuilder.add("Directors", Utils.arrayToJson(directors));
+		if (casting != null)
+			mediaBuilder.add("Casting", Utils.arrayToJson(casting));
+		if (genres != null)
+			mediaBuilder.add("Genres", Utils.arrayToJson(genres));
+		if (duration != null)
+			mediaBuilder.add("Duration", duration);
+		return mediaBuilder.build();
+
 	}
 }

@@ -40,6 +40,10 @@ public class FilmFinder {
 			if (args[i].equals("-f") || args[i].equals("--file")) {
 				/* Adding a database file */
 				i++;
+				if (!args[i].endsWith(".txt") && !args[i].endsWith(".json")) {
+					System.err.println(args[i] + " is not a database!");
+					System.exit(1);
+				}
 				try {
 					database.loadDatabaseFile(args[i]);
 				} catch (FileNotFoundException e) {

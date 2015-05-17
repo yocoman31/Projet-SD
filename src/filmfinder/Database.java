@@ -1,9 +1,20 @@
 package filmfinder;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonWriter;
 
 import filmfinder.Media.Type;
 
@@ -115,7 +126,20 @@ public class Database {
 	 * @throws FileNotFoundException
 	 */
 	public void loadDatabaseFile(String file) throws FileNotFoundException {
-		// TODO: utiliser des régex
+		if (file.endsWith(".txt"))
+			loadTextDatabase(file);
+		else if (file.endsWith(".json"))
+			loadJSONDatabase(file);
+	}
+
+	/**
+	 * Method loading a text database
+	 * 
+	 * @param file
+	 *            : path to the database
+	 * @throws FileNotFoundException
+	 */
+	private void loadTextDatabase(String file) throws FileNotFoundException {
 		Scanner scanner = new Scanner(new FileReader(file));
 		while (scanner.hasNext()) {
 			String tampon = scanner.nextLine();
@@ -188,5 +212,92 @@ public class Database {
 					synopsi, directors, casting, genre, temps));
 		}
 		scanner.close();
+		this.saveToJSON(file.substring(0, file.lastIndexOf(".")));
+	}
+
+	/**
+	 * Method saving the database to the Json format
+	 * 
+	 * @param file
+	 *            : output file
+	 * @throws FileNotFoundException
+	 */
+	public void saveToJSON(String file) throws FileNotFoundException {
+		JsonArrayBuilder databaseBuilder = Json.createArrayBuilder();
+		ArrayList<Media> database = new ArrayList<Media>();
+		database.addAll(filmsSeen.getData());
+		database.addAll(filmsNotSeen.getData());
+
+		for (Media m : database) {
+			databaseBuilder.add(m.toJson());
+		}
+		JsonObject res = Json.createObjectBuilder()
+				.add("Medias", databaseBuilder.build()).build();
+
+		OutputStream output;
+		output = new FileOutputStream(file + ".json");
+		JsonWriter writer = Json.createWriter(output);
+		writer.writeObject(res);
+
+	}
+
+	/**
+	 * Method loading a database in the json format
+	 * 
+	 * @param file
+	 *            : database to load
+	 * @throws FileNotFoundException
+	 */
+	private void loadJSONDatabase(String file) throws FileNotFoundException {
+		InputStream input;
+		input = new FileInputStream(file);
+		JsonReader jsonObjectReader = Json.createReader(input);
+		JsonObject test = jsonObjectReader.readObject();
+		JsonArray testArray = test.getJsonArray("Medias");
+		for (int i = 0; i < testArray.size(); i++) {
+			String titre = testArray.getJsonObject(i).getString("Title");
+			Integer year = testArray.getJsonObject(i).getInt("Year");
+			String stype = testArray.getJsonObject(i).getString("Type");
+			Media.Type type = Media.Type.NONE;
+			if (stype.equals("SERIE"))
+				type = Media.Type.SERIE;
+			else if (stype.equals("FILM"))
+				type = Media.Type.FILM;
+			String synopsis = testArray.getJsonObject(i).getString("Synopsis");
+			JsonArray directorsArray = testArray.getJsonObject(i).getJsonArray(
+					"Directors");
+			String[] directors = null;
+			if (directorsArray != null) {
+				directors = new String[directorsArray.size()];
+				for (int j = 0; directorsArray != null
+						&& j < directorsArray.size(); j++) {
+					directors[j] = directorsArray.getString(j);
+				}
+			}
+			JsonArray castingArray = testArray.getJsonObject(i).getJsonArray(
+					"Casting");
+			String[] casting = null;
+			if (castingArray != null) {
+				casting = new String[castingArray.size()];
+				for (int j = 0; castingArray != null && j < castingArray.size(); j++) {
+					casting[j] = castingArray.getString(j);
+				}
+			}
+			JsonArray genresArray = testArray.getJsonObject(i).getJsonArray(
+					"Genres");
+			String[] genres = null;
+			if (genresArray != null) {
+				genres = new String[genresArray.size()];
+				for (int j = 0; genresArray != null && j < genresArray.size(); j++) {
+					genres[j] = genresArray.getString(j);
+				}
+			}
+			Integer duration = null;
+			if (testArray.getJsonObject(i).keySet().contains("Duration")) {
+				duration = testArray.getJsonObject(i).getInt("Duration");
+			}
+			filmsNotSeen.add(new Media(titre, year, type, synopsis, directors,
+					casting, genres, duration));
+		}
 	}
 }

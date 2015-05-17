@@ -1,5 +1,9 @@
 package filmfinder;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+
 /**
  * Class containing utilitary method
  * 
@@ -55,5 +59,13 @@ public final class Utils {
 				res += ", ";
 		}
 		return res;
+	}
+
+	public final static JsonArray arrayToJson(String[] array) {
+		JsonArrayBuilder builder = Json.createArrayBuilder();
+		for (String s : array) {
+			builder.add(s);
+		}
+		return builder.build();
 	}
 }
