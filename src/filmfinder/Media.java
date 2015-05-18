@@ -295,10 +295,11 @@ public class Media implements Comparable<Media> {
 		} catch (MalformedURLException e) {
 			imgURL = null;
 		}
-		String res = "<html<h2>Informations:</h2> <img src=\""
+		String res = "<html<h2>"
+				+ title
+				+ "</h2> <center><img src=\""
 				+ imgURL
-				+ "\" alt=\"Smiley face\" height=\"260\" width=\"200\"><br> <b>Titre:</b> "
-				+ this.title + "<br>";
+				+ "\" alt=\"Smiley face\" height=\"260\" width=\"200\"></center><br>";
 		if (year != null)
 			res += "<b>Year: </b>" + year + "<br>";
 		if (type == Media.Type.FILM)

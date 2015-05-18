@@ -31,6 +31,7 @@ public class Database {
 	 * Lists used as model
 	 */
 	private ArrayListModel filmsNotSeen, filmsSeen, recommendedFilms;
+	private String fileOutput;
 
 	/**
 	 * Constructor initializing the database Model
@@ -40,6 +41,7 @@ public class Database {
 	 */
 	public Database() {
 		super();
+		fileOutput = "";
 		filmsNotSeen = new ArrayListModel();
 		filmsSeen = new ArrayListModel();
 		recommendedFilms = new ArrayListModel();
@@ -141,7 +143,7 @@ public class Database {
 	 *            : path to the database
 	 * @throws FileNotFoundException
 	 */
-	private void loadTextDatabase(String file) throws FileNotFoundException {
+	private void loadTextDatabase(String file) throws IOException {
 		Scanner scanner = new Scanner(new FileReader(file));
 		while (scanner.hasNext()) {
 			String tampon = scanner.nextLine();
@@ -219,7 +221,13 @@ public class Database {
 					synopsi, directors, casting, genre, temps));
 		}
 		scanner.close();
-		this.saveToJSON(file.substring(0, file.lastIndexOf(".")));
+
+		ArrayList<Media> database = new ArrayList<Media>();
+		database.addAll(filmsSeen.getData());
+		database.addAll(filmsNotSeen.getData());
+
+		this.saveToJSON(file.substring(0, file.lastIndexOf(".")) + ".json",
+				database);
 	}
 
 	/**
@@ -229,23 +237,25 @@ public class Database {
 	 *            : output file
 	 * @throws FileNotFoundException
 	 */
-	public void saveToJSON(String file) throws FileNotFoundException {
+	public void saveToJSON(String file, ArrayList<Media> listOfMedia)
+			throws IOException {
 		JsonArrayBuilder databaseBuilder = Json.createArrayBuilder();
-		ArrayList<Media> database = new ArrayList<Media>();
-		database.addAll(filmsSeen.getData());
-		database.addAll(filmsNotSeen.getData());
 
-		for (Media m : database) {
+		for (Media m : listOfMedia) {
 			databaseBuilder.add(m.toJson());
 		}
 		JsonObject res = Json.createObjectBuilder()
 				.add("Medias", databaseBuilder.build()).build();
 
 		OutputStream output;
-		output = new FileOutputStream(file + ".json");
+		output = new FileOutputStream(file);
 		JsonWriter writer = Json.createWriter(output);
 		writer.writeObject(res);
 
+	}
+
+	public void saveOutPutToJSON() throws IOException {
+		saveToJSON(fileOutput, recommendedFilms.getData());
 	}
 
 	/**
@@ -307,5 +317,13 @@ public class Database {
 					casting, genres, duration));
 		}
 		input.close();
+	}
+
+	public String getFileOutput() {
+		return fileOutput;
+	}
+
+	public void setFileOutput(String fileOutput) {
+		this.fileOutput = fileOutput;
 	}
 }

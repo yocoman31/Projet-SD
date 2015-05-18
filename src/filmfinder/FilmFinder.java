@@ -1,7 +1,6 @@
 package filmfinder;
 
-//TODO: JSON FICHIER -json en export
-//TODO: menuBAR pour selectionner % des params
+//TODO: mettre à jour help :)
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,6 +22,8 @@ import java.util.ArrayList;
  * --graphic or -g to open the program in a graphic mode <br>
  * --help or -h to see this message<br>
  * --seen or -s [filmTitle] to add a film you've already seen <br>
+ * --json [file] to select an JSON output for the recommended films<br>
+ * -nb=[number] --number-of-recommendation=[number] number of recommendation
  * 
  * @author Yoni Levy & Romain Tissier
  *
@@ -103,6 +104,13 @@ public class FilmFinder {
 					System.err.println("Le type " + type + "est inconnu!");
 					mediaAlgorithm.setType(Media.Type.NONE);
 				}
+			} else if (args[i].startsWith("-nb=")
+					|| args[i].startsWith("--number-of-recommendation=")) {
+				mediaAlgorithm.setNbRecommandation(Integer.parseInt(args[i]
+						.substring(args[i].indexOf("=") + 1)));
+			} else if (args[i].startsWith("--json")) {
+				i++;
+				database.setFileOutput(args[i]);
 			} else {
 				System.err
 						.println("\""
@@ -126,8 +134,12 @@ public class FilmFinder {
 						.println("Error, there is no film you've seen in our database");
 				System.exit(1);
 			}
-			for (Media m : mediaAlgorithm.execute(10)) {
+			ArrayList<Media> recommendedFilms = mediaAlgorithm.execute();
+			for (Media m : recommendedFilms) {
 				System.out.println("We advise you: " + m.toString());
+			}
+			if (!database.getFileOutput().equals("")) {
+
 			}
 		} else {
 			@SuppressWarnings("unused")

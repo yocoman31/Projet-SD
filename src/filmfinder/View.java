@@ -7,9 +7,12 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -17,14 +20,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-//TODO: afficher un screen de l'affiche
+//TODO: back office
 
 /**
- * Gui of the program
+ * GUI of the program
  * 
  * @author Yoni Levy & Romain Tissier
  *
@@ -38,7 +42,9 @@ public class View extends JFrame {
 	private JList<Media> filmsList, filmsSeenList, recommandationList;
 	JTextPane informations;
 	private JButton addButton, removeButton, findButton;
-
+	private JSlider sliderCasting, sliderGenre, sliderDirectors;
+	private JComboBox<String> typeComboBox;
+	private JComboBox<Integer> nbResComboBox;
 	/**
 	 * Model variables
 	 */
@@ -66,6 +72,9 @@ public class View extends JFrame {
 		informations = new JTextPane();
 		informations.setContentType("text/html");
 		informations.setOpaque(false);
+		informations.setEditable(false);
+		// informations.setSelectionStart(0);
+		informations.setCaretPosition(0);
 		informations.setText("<h2>Informations</h2>");
 
 		JPanel panButonAdd = new JPanel();
@@ -81,12 +90,73 @@ public class View extends JFrame {
 		panButon.setLayout(new GridLayout(2, 1));
 		panButon.add(panButonAdd);
 		panButon.add(panButonRemove);
-		JPanel panbtngo = new JPanel();
-		JPanel panfind = new JPanel();
-		panfind.setLayout(new GridBagLayout());
+
 		findButton = new JButton("Find :");
-		panbtngo.add(findButton);
-		panfind.add(panbtngo);
+		JPanel btnFindpan = new JPanel();
+		btnFindpan.add(findButton);
+
+		JLabel labelGenre = new JLabel("Genre coeficient:");
+		JPanel labelGenrePan = new JPanel();
+		labelGenrePan.add(labelGenre);
+
+		sliderGenre = new JSlider();
+		sliderGenre.setMinimum(1);
+		sliderGenre.setMaximum(51);
+		sliderGenre.setValue(26);
+
+		JLabel labelCasting = new JLabel("Casting coeficient:");
+		JPanel labelCastingPan = new JPanel();
+		labelCastingPan.add(labelCasting);
+
+		sliderCasting = new JSlider();
+		sliderCasting.setMinimum(1);
+		sliderCasting.setMaximum(51);
+		sliderCasting.setValue(26);
+
+		JLabel labelDirectors = new JLabel("Directors coeficient:");
+		JPanel labelDirectorsPan = new JPanel();
+		labelDirectorsPan.add(labelDirectors);
+
+		sliderDirectors = new JSlider();
+		sliderDirectors.setMinimum(1);
+		sliderDirectors.setMaximum(51);
+		sliderDirectors.setValue(26);
+
+		JLabel labelType = new JLabel("Type:");
+		JPanel labelTypePan = new JPanel();
+		labelTypePan.add(labelType);
+
+		typeComboBox = new JComboBox<String>();
+		typeComboBox.addItem("None");
+		typeComboBox.addItem("Series");
+		typeComboBox.addItem("Films");
+
+		JLabel labelnbRes = new JLabel("Number of result:");
+		JPanel labelnbResPan = new JPanel();
+		labelnbResPan.add(labelnbRes);
+
+		nbResComboBox = new JComboBox<Integer>();
+		for (int i = 1; i < 31; i++)
+			nbResComboBox.addItem(i);
+		nbResComboBox.setSelectedIndex(9);
+
+		JPanel panConfig = new JPanel();
+		panConfig.setLayout(new BoxLayout(panConfig, BoxLayout.PAGE_AXIS));
+		panConfig.add(btnFindpan);
+		panConfig.add(labelGenrePan);
+		panConfig.add(sliderGenre);
+		panConfig.add(labelCastingPan);
+		panConfig.add(sliderCasting);
+		panConfig.add(labelDirectorsPan);
+		panConfig.add(sliderDirectors);
+		panConfig.add(labelTypePan);
+		panConfig.add(typeComboBox);
+		panConfig.add(labelnbResPan);
+		panConfig.add(nbResComboBox);
+
+		JPanel panConfigVertical = new JPanel();
+		panConfigVertical.setLayout(new GridBagLayout());
+		panConfigVertical.add(panConfig);
 
 		JPanel mainPanel = new JPanel();
 		GridLayout mainLayout = new GridLayout(2, 3);
@@ -95,7 +165,7 @@ public class View extends JFrame {
 		mainPanel.add(panButon);
 		mainPanel.add(new JScrollPane(filmsSeenList));
 		mainPanel.add(new JScrollPane(informations));
-		mainPanel.add(panfind);
+		mainPanel.add(panConfigVertical);
 		mainPanel.add(new JScrollPane(recommandationList));
 		this.setContentPane(mainPanel);
 
@@ -114,6 +184,7 @@ public class View extends JFrame {
 					Media t = (Media) database.getFilmsNotSeen().get(
 							filmsList.getSelectedIndex());
 					informations.setText(t.getInfoHtml());
+					informations.setCaretPosition(0);
 				}
 			}
 		});
@@ -123,6 +194,7 @@ public class View extends JFrame {
 					Media t = (Media) database.getFilmsSeen().get(
 							filmsSeenList.getSelectedIndex());
 					informations.setText(t.getInfoHtml());
+					informations.setCaretPosition(0);
 				}
 			}
 		});
@@ -133,6 +205,7 @@ public class View extends JFrame {
 							Media t = (Media) database.getRecommendedFilms()
 									.get(recommandationList.getSelectedIndex());
 							informations.setText(t.getInfoHtml());
+							informations.setCaretPosition(0);
 						}
 					}
 				});
@@ -154,13 +227,37 @@ public class View extends JFrame {
 		findButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!database.getFilmsSeen().isEmpty()) {
-					ArrayList<Media> resa = mediaAlgorithm.execute(10);
-					recommandationList.setEnabled(true);
 					for (int i = database.getRecommendedFilms().size() - 1; i >= 0; i--) {
 						database.getRecommendedFilms().remove(i);
 					}
+					mediaAlgorithm.setGenresWeight(sliderGenre.getValue());
+					mediaAlgorithm.setCastingWeight(sliderCasting.getValue());
+					mediaAlgorithm.setDirectorWeight(sliderDirectors.getValue());
+
+					mediaAlgorithm.setNbRecommandation((Integer) nbResComboBox
+							.getSelectedItem());
+
+					if (typeComboBox.getSelectedItem() == "Films") {
+						mediaAlgorithm.setType(Media.Type.FILM);
+					} else if (typeComboBox.getSelectedItem() == "Series") {
+						mediaAlgorithm.setType(Media.Type.SERIE);
+					} else {
+						mediaAlgorithm.setType(Media.Type.NONE);
+					}
+
+					ArrayList<Media> resa = mediaAlgorithm.execute();
+					recommandationList.setEnabled(true);
 					for (Media m : resa) {
 						database.getRecommendedFilms().add(m);
+					}
+					if (!database.getFileOutput().equals("")) {
+						try {
+							database.saveOutPutToJSON();
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(rootPane,
+									"Failled to save output to JSON", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					}
 					recommandationList.updateUI();
 				} else {
@@ -241,8 +338,34 @@ public class View extends JFrame {
 			}
 		});
 
+		JMenuItem saveRecommendedFilms = new JMenuItem(
+				"Save recommended films list");
+		saveRecommendedFilms.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				JFileChooser dialogue = new JFileChooser();
+				dialogue.setName("Choose your save file");
+				dialogue.showSaveDialog(rootPane);
+				if (dialogue.getSelectedFile() != null) {
+					String outPutFile = dialogue.getSelectedFile().getPath();
+					if (!outPutFile.endsWith(".json"))
+						outPutFile += ".json";
+					database.setFileOutput(outPutFile);
+					try {
+						database.saveOutPutToJSON();
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(rootPane,
+								"Failled to save film list!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				JOptionPane.showMessageDialog(rootPane, "Film list saved!",
+						"Information", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+
 		JMenu fileMenu = new JMenu("File");
 		fileMenu.add(addDatabaseItem);
+		fileMenu.add(saveRecommendedFilms);
 		fileMenu.add(closeItem);
 
 		JMenuBar menuBar = new JMenuBar();

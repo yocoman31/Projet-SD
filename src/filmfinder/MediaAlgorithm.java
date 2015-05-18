@@ -23,7 +23,7 @@ public class MediaAlgorithm {
 	 * Configuration variables
 	 */
 	private Integer averageDuration, genreWeight, castingWeight,
-			directorWeight, durationShift, durationWeight;
+			directorWeight, durationShift, durationWeight, nbRecommandation;
 	private Media.Type type;
 	/**
 	 * Database used by the algorithm
@@ -39,6 +39,7 @@ public class MediaAlgorithm {
 	public MediaAlgorithm(Database database) {
 		this.database = database;
 		averageDuration = null;
+		setNbRecommandation(10);
 		genreWeight = null;
 		castingWeight = null;
 		directorWeight = null;
@@ -144,7 +145,7 @@ public class MediaAlgorithm {
 	 *            : number of film you want
 	 * @return list of recommended films
 	 */
-	public ArrayList<Media> execute(int n) {
+	public ArrayList<Media> execute() {
 		initAlgorithm();
 		if (genreWeight == null)
 			genreWeight = 1;
@@ -155,10 +156,14 @@ public class MediaAlgorithm {
 		if (type == null) {
 			type = Media.Type.NONE;
 		}
+
+		if (nbRecommandation > database.getFilmsNotSeen().size())
+			nbRecommandation = database.getFilmsNotSeen().size();
+
 		this.computeCoefficients();
 		this.computeFilmsRate();
 		ArrayList<Media> res = new ArrayList<Media>();
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < nbRecommandation; i++) {
 			int max = 0;
 			Media mMax = null;
 			for (Media m : filmsNotSeen.keySet()) {
@@ -168,7 +173,8 @@ public class MediaAlgorithm {
 					mMax = m;
 				}
 			}
-			res.add(mMax);
+			if (mMax != null)
+				res.add(mMax);
 		}
 		return res;
 	}
@@ -285,5 +291,13 @@ public class MediaAlgorithm {
 	 */
 	public void setType(Media.Type type) {
 		this.type = type;
+	}
+
+	public Integer getNbRecommandation() {
+		return nbRecommandation;
+	}
+
+	public void setNbRecommandation(Integer nbRecommandation) {
+		this.nbRecommandation = nbRecommandation;
 	}
 }
