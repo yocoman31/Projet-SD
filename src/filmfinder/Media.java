@@ -1,5 +1,9 @@
 package filmfinder;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -280,15 +284,29 @@ public class Media implements Comparable<Media> {
 	 * @return the formated information
 	 */
 	public String getInfoHtml() {
-		String res = "<html<h2>Informations:</h2><b>Titre:</b> " + this.title
-				+ "<br>";
+		URL imgURL = null;
+		File f = new File("img/" + title + ".jpg");
+		try {
+			if (f.exists())
+				imgURL = new File("img/" + title + ".jpg").toURI().toURL();
+			else
+				imgURL = new File("img/default.png").toURI().toURL();
+
+		} catch (MalformedURLException e) {
+			imgURL = null;
+		}
+		String res = "<html<h2>Informations:</h2> <img src=\""
+				+ imgURL
+				+ "\" alt=\"Smiley face\" height=\"260\" width=\"200\"><br> <b>Titre:</b> "
+				+ this.title + "<br>";
 		if (year != null)
 			res += "<b>Year: </b>" + year + "<br>";
 		if (type == Media.Type.FILM)
 			res += "<b>Type:</b> Film<br>";
 		else
 			res += "<b>Type:</b> Serie<br>";
-		res += "<b>Synopsis:</b> " + synopsis + "<br>";
+		if (synopsis != null)
+			res += "<b>Synopsis:</b> " + synopsis + "<br>";
 		if (directors != null)
 			res += "<b>Directors(s): </b>" + Utils.formatWithComma(directors)
 					+ "<br>";

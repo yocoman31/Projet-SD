@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -123,13 +124,14 @@ public class Database {
 	 * 
 	 * @param file
 	 *            : path of the file containing a list of film
-	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	public void loadDatabaseFile(String file) throws FileNotFoundException {
+	public void loadDatabaseFile(String file) throws IOException {
 		if (file.endsWith(".txt"))
 			loadTextDatabase(file);
 		else if (file.endsWith(".json"))
 			loadJSONDatabase(file);
+		filmsNotSeen.sort();
 	}
 
 	/**
@@ -161,10 +163,15 @@ public class Database {
 			String synopsi = "";
 			while (synopsi.equals(""))
 				synopsi = scanner.nextLine();
-			synopsi = Utils.eraseSpace(synopsi);
+			if (!synopsi.startsWith("Director"))
+				synopsi = Utils.eraseSpace(synopsi);
 			String directors[] = null, casting[] = null, genre[] = null;
 			do {
-				tampon = scanner.nextLine();
+				if (synopsi.startsWith("Director")) {
+					tampon = synopsi;
+					synopsi = "no information";
+				} else
+					tampon = scanner.nextLine();
 				if (tampon.startsWith("Director")) {
 					directors = new String[Utils.countOccurence(tampon, ',')];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
@@ -246,9 +253,9 @@ public class Database {
 	 * 
 	 * @param file
 	 *            : database to load
-	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	private void loadJSONDatabase(String file) throws FileNotFoundException {
+	private void loadJSONDatabase(String file) throws IOException {
 		InputStream input;
 		input = new FileInputStream(file);
 		JsonReader jsonObjectReader = Json.createReader(input);
@@ -299,5 +306,6 @@ public class Database {
 			filmsNotSeen.add(new Media(titre, year, type, synopsis, directors,
 					casting, genres, duration));
 		}
+		input.close();
 	}
 }

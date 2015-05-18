@@ -61,6 +61,13 @@ public final class Utils {
 		return res;
 	}
 
+	/**
+	 * Function converting string array to JSON
+	 * 
+	 * @param array
+	 *            : array to convert
+	 * @return JsonArray
+	 */
 	public final static JsonArray arrayToJson(String[] array) {
 		JsonArrayBuilder builder = Json.createArrayBuilder();
 		for (String s : array) {
@@ -68,4 +75,5 @@ public final class Utils {
 		}
 		return builder.build();
 	}
+
 }

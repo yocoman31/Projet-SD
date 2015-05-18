@@ -4,7 +4,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -57,7 +57,8 @@ public class View extends JFrame {
 		super("Film Finder");
 		this.database = database;
 		this.mediaAlgorithm = mediaAlgorithm;
-		this.setSize(800, 600);
+		// this.setSize(800, 600);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setJMenuBar();
 		this.initList();
@@ -121,12 +122,20 @@ public class View extends JFrame {
 				if (filmsSeenList.isSelectionEmpty() == false) {
 					Media t = (Media) database.getFilmsSeen().get(
 							filmsSeenList.getSelectedIndex());
-					System.out.println(t.getInfoHtml());
 					informations.setText(t.getInfoHtml());
-
 				}
 			}
 		});
+		recommandationList
+				.addListSelectionListener(new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						if (recommandationList.isSelectionEmpty() == false) {
+							Media t = (Media) database.getRecommendedFilms()
+									.get(recommandationList.getSelectedIndex());
+							informations.setText(t.getInfoHtml());
+						}
+					}
+				});
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (filmsList.isSelectionEmpty() == false) {
@@ -222,9 +231,9 @@ public class View extends JFrame {
 							JOptionPane.showMessageDialog(rootPane,
 									"This is not a database!", "Error",
 									JOptionPane.ERROR_MESSAGE);
-					} catch (FileNotFoundException e) {
+					} catch (IOException e) {
 						JOptionPane.showMessageDialog(rootPane,
-								"File not found!", "Error",
+								"File not found or corrupted!", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					}
 				}

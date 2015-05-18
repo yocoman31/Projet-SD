@@ -1,8 +1,8 @@
 package filmfinder;
 
-//TODO: JSON
+//TODO: JSON FICHIER -json en export
 //TODO: menuBAR pour selectionner % des params
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -44,12 +44,15 @@ public class FilmFinder {
 					System.err.println(args[i] + " is not a database!");
 					System.exit(1);
 				}
+
 				try {
 					database.loadDatabaseFile(args[i]);
-				} catch (FileNotFoundException e) {
-					System.err.println("File \"" + args[i] + "\"not found! ");
+				} catch (IOException e) {
+					System.err.println("File \"" + args[i]
+							+ "\"not found or corrupted! ");
 					System.exit(1);
 				}
+
 			} else if (args[i].equals("-s") || args[i].equals("--seen")) {
 				/* Adding a film in filmSeen */
 				i++;
@@ -88,13 +91,13 @@ public class FilmFinder {
 				mediaAlgorithm.setDurationWeight(Integer.parseInt(args[i]
 						.substring(args[i].indexOf("=") + 1)));
 			} else if (args[i].startsWith("--type=")
-					|| args[i].startsWith("-type=")) {
+					|| args[i].startsWith("-t=")) {
 				String type = args[i].substring(args[i].indexOf("=") + 1);
-				if (type == "NONE") {
+				if (type.equals("NONE")) {
 					mediaAlgorithm.setType(Media.Type.NONE);
-				} else if (type == "SERIES") {
+				} else if (type.equals("SERIES")) {
 					mediaAlgorithm.setType(Media.Type.SERIE);
-				} else if (type == "FILMS") {
+				} else if (type.equals("FILMS")) {
 					mediaAlgorithm.setType(Media.Type.FILM);
 				} else {
 					System.err.println("Le type " + type + "est inconnu!");
