@@ -297,7 +297,7 @@ public class Media implements Comparable<Media> {
 		}
 		String res = "<html<h2>Informations:</h2> <img src=\""
 				+ imgURL
-				+ "\" alt=\"Smiley face\" height=\"260\" width=\"200\"><br> <b>Titre:</b> "
+				+ "\" alt=\"Smiley face\" height=\"258\" width=\"192\"><br> <b>Titre:</b> "
 				+ this.title + "<br>";
 		if (year != null)
 			res += "<b>Year: </b>" + year + "<br>";

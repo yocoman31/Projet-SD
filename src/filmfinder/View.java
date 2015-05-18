@@ -66,6 +66,7 @@ public class View extends JFrame {
 		informations = new JTextPane();
 		informations.setContentType("text/html");
 		informations.setOpaque(false);
+		informations.setEditable(false);
 		informations.setText("<h2>Informations</h2>");
 
 		JPanel panButonAdd = new JPanel();
