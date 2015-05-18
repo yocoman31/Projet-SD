@@ -131,7 +131,7 @@ public class View extends JFrame {
 		typeComboBox.addItem("Series");
 		typeComboBox.addItem("Films");
 
-		JLabel labelnbRes = new JLabel("Number of result:");
+		JLabel labelnbRes = new JLabel("Number of results:");
 		JPanel labelnbResPan = new JPanel();
 		labelnbResPan.add(labelnbRes);
 

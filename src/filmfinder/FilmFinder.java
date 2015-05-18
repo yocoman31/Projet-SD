@@ -1,6 +1,8 @@
 package filmfinder;
 
 //TODO: mettre à jour help :)
+//TODO: regler problème de la pop-up si annulation de la sauvegarde en json
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -50,7 +52,7 @@ public class FilmFinder {
 					database.loadDatabaseFile(args[i]);
 				} catch (IOException e) {
 					System.err.println("File \"" + args[i]
-							+ "\"not found or corrupted! ");
+							+ "\" not found or corrupted! ");
 					System.exit(1);
 				}
 
@@ -127,11 +129,11 @@ public class FilmFinder {
 				System.err.println("Error, there is no database selected");
 				System.exit(1);
 			} else if (database.getFilmsNotSeen().isEmpty()) {
-				System.err.println("Error, you've seen every film !");
+				System.err.println("Error, you've seen every films !");
 				System.exit(1);
 			} else if (database.getFilmsSeen().isEmpty()) {
 				System.err
-						.println("Error, there is no film you've seen in our database");
+						.println("Error, there is no films you've seen in our database");
 				System.exit(1);
 			}
 			ArrayList<Media> recommendedFilms = mediaAlgorithm.execute();

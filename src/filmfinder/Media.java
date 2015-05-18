@@ -299,7 +299,7 @@ public class Media implements Comparable<Media> {
 				+ title
 				+ "</h2> <center><img src=\""
 				+ imgURL
-				+ "\" alt=\"Smiley face\" height=\"260\" width=\"200\"></center><br>";
+				+ "\" alt=\""+ title +"\" height=\"260\" width=\"200\"></center><br>";
 		if (year != null)
 			res += "<b>Year: </b>" + year + "<br>";
 		if (type == Media.Type.FILM)

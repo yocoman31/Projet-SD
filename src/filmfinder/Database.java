@@ -162,16 +162,16 @@ public class Database {
 				type = Media.Type.SERIE;
 				annee = annee.substring(0, 4);
 			}
-			String synopsi = "";
-			while (synopsi.equals(""))
-				synopsi = scanner.nextLine();
-			if (!synopsi.startsWith("Director"))
-				synopsi = Utils.eraseSpace(synopsi);
+			String synopsis = "";
+			while (synopsis.equals(""))
+				synopsis = scanner.nextLine();
+			if (!synopsis.startsWith("Director"))
+				synopsis = Utils.eraseSpace(synopsis);
 			String directors[] = null, casting[] = null, genre[] = null;
 			do {
-				if (synopsi.startsWith("Director")) {
-					tampon = synopsi;
-					synopsi = "no information";
+				if (synopsis.startsWith("Director")) {
+					tampon = synopsis;
+					synopsis = "No informations";
 				} else
 					tampon = scanner.nextLine();
 				if (tampon.startsWith("Director")) {
@@ -218,7 +218,7 @@ public class Database {
 				}
 			} while (!tampon.equals(""));
 			filmsNotSeen.add(new Media(titre, Integer.parseInt(annee), type,
-					synopsi, directors, casting, genre, temps));
+					synopsis, directors, casting, genre, temps));
 		}
 		scanner.close();
 
