@@ -1,16 +1,16 @@
 package filmfinder;
 
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
 
 import filmfinder.Media.Type;
-import static org.junit.Assert.*;
 
 public class TestMediaAlgorithm {
 
-	
 	@Test
 	public void testCasting() {
 		Database database = new Database();
@@ -20,17 +20,18 @@ public class TestMediaAlgorithm {
 			fail("Le poids du casting n'est pas bon");
 		}
 	}
-	
+
 	@Test
 	public void testDirector() {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
-		algo.setDirectorWeight(5);;
+		algo.setDirectorWeight(5);
+		;
 		if (algo.getDirectorWeight() != 5) {
 			fail("Le poids du director n'est pas bon");
 		}
 	}
-	
+
 	@Test
 	public void testGenre() {
 		Database database = new Database();
@@ -40,7 +41,7 @@ public class TestMediaAlgorithm {
 			fail("Le poids du genre n'est pas bon");
 		}
 	}
-	
+
 	@Test
 	public void testRecommandation() {
 		Database database = new Database();
@@ -50,7 +51,7 @@ public class TestMediaAlgorithm {
 			fail("Le nombre de recommandations n'est pas bon");
 		}
 	}
-	
+
 	@Test
 	public void testDuration() {
 		Database database = new Database();
@@ -64,7 +65,7 @@ public class TestMediaAlgorithm {
 			fail("Le décalage pour la durée n'est pas bon");
 		}
 	}
-	
+
 	@Test
 	public void testType() {
 		Database database = new Database();
@@ -82,22 +83,23 @@ public class TestMediaAlgorithm {
 			fail("Le type n'est pas bon");
 		}
 	}
-	
+
 	@Test
 	public void testAlgorithme() throws IOException {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
 		database.loadDatabaseFile("films.txt");
-		
+
 		ArrayList<String> films = new ArrayList<String>();
 		films.add("Fast & Furious 7");
 		films.add("Fast & Furious 6");
-		
+
 		database.addFilmsSeen(films);
 		ArrayList<Media> res = algo.execute();
 		if (!res.get(0).getTitle().equals("Fast and Furious")) {
 			fail("Problème dans l'algorithme");
 		}
 	}
+	// TODO: (Yoni) de même avec divergente :)
 
 }
