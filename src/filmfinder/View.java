@@ -25,8 +25,6 @@ import javax.swing.JTextPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-//TODO: back office
-
 /**
  * GUI of the program
  * 
@@ -357,9 +355,9 @@ public class View extends JFrame {
 								"Failled to save film list!", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					}
+					JOptionPane.showMessageDialog(rootPane, "Film list saved!",
+							"Information", JOptionPane.INFORMATION_MESSAGE);
 				}
-				JOptionPane.showMessageDialog(rootPane, "Film list saved!",
-						"Information", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
