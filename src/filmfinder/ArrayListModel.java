@@ -24,6 +24,7 @@ public class ArrayListModel extends AbstractListModel<Media> {
 	 * Constructor initializing the model
 	 */
 	public ArrayListModel() {
+		super();
 		data = new ArrayList<Media>();
 	}
 

@@ -1,9 +1,11 @@
 package filmfinder;
 
+import java.awt.Event;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -22,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -40,7 +43,7 @@ public class View extends JFrame {
 	private JList<Media> filmsList, filmsSeenList, recommandationList;
 	JTextPane informations;
 	private JButton addButton, removeButton, findButton;
-	private JSlider sliderCasting, sliderGenre, sliderDirectors;
+	private JSlider sliderCasting, sliderGenres, sliderDirectors;
 	private JComboBox<String> typeComboBox;
 	private JComboBox<Integer> nbResComboBox;
 	/**
@@ -93,16 +96,16 @@ public class View extends JFrame {
 		JPanel btnFindpan = new JPanel();
 		btnFindpan.add(findButton);
 
-		JLabel labelGenre = new JLabel("Genre coeficient:");
+		JLabel labelGenre = new JLabel("Genref coefficient:");
 		JPanel labelGenrePan = new JPanel();
 		labelGenrePan.add(labelGenre);
 
-		sliderGenre = new JSlider();
-		sliderGenre.setMinimum(1);
-		sliderGenre.setMaximum(51);
-		sliderGenre.setValue(26);
+		sliderGenres = new JSlider();
+		sliderGenres.setMinimum(1);
+		sliderGenres.setMaximum(51);
+		sliderGenres.setValue(26);
 
-		JLabel labelCasting = new JLabel("Casting coeficient:");
+		JLabel labelCasting = new JLabel("Casting coefficient:");
 		JPanel labelCastingPan = new JPanel();
 		labelCastingPan.add(labelCasting);
 
@@ -111,7 +114,7 @@ public class View extends JFrame {
 		sliderCasting.setMaximum(51);
 		sliderCasting.setValue(26);
 
-		JLabel labelDirectors = new JLabel("Directors coeficient:");
+		JLabel labelDirectors = new JLabel("Directors coefficient:");
 		JPanel labelDirectorsPan = new JPanel();
 		labelDirectorsPan.add(labelDirectors);
 
@@ -142,7 +145,7 @@ public class View extends JFrame {
 		panConfig.setLayout(new BoxLayout(panConfig, BoxLayout.PAGE_AXIS));
 		panConfig.add(btnFindpan);
 		panConfig.add(labelGenrePan);
-		panConfig.add(sliderGenre);
+		panConfig.add(sliderGenres);
 		panConfig.add(labelCastingPan);
 		panConfig.add(sliderCasting);
 		panConfig.add(labelDirectorsPan);
@@ -228,7 +231,7 @@ public class View extends JFrame {
 					for (int i = database.getRecommendedFilms().size() - 1; i >= 0; i--) {
 						database.getRecommendedFilms().remove(i);
 					}
-					mediaAlgorithm.setGenresWeight(sliderGenre.getValue());
+					mediaAlgorithm.setGenresWeight(sliderGenres.getValue());
 					mediaAlgorithm.setCastingWeight(sliderCasting.getValue());
 					mediaAlgorithm.setDirectorWeight(sliderDirectors.getValue());
 
@@ -253,7 +256,7 @@ public class View extends JFrame {
 							database.saveOutPutToJSON();
 						} catch (IOException e1) {
 							JOptionPane.showMessageDialog(rootPane,
-									"Failled to save output to JSON", "Error",
+									"Failed to save output to JSON", "Error",
 									JOptionPane.ERROR_MESSAGE);
 						}
 					}
@@ -293,7 +296,7 @@ public class View extends JFrame {
 		recommandationList.setEnabled(false);
 		Media defaultList = new Media();
 		defaultList
-				.setTitle("No recommandation, \nPlease click \"find\" to find new film");
+				.setTitle("No recommandations, \nPlease click on \"find\" to find new films");
 		database.getRecommendedFilms().add(defaultList);
 	}
 
@@ -301,14 +304,14 @@ public class View extends JFrame {
 	 * Method initializing the menu bar
 	 */
 	private void setJMenuBar() {
-		JMenuItem closeItem = new JMenuItem("Close");
+		JMenuItem closeItem = new JMenuItem("Close", 'C');
 		closeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				System.exit(0);
 			}
 		});
 
-		JMenuItem addDatabaseItem = new JMenuItem("Add database");
+		JMenuItem addDatabaseItem = new JMenuItem("Add database", 'A');
 		addDatabaseItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JFileChooser dialogue = new JFileChooser();
@@ -337,7 +340,7 @@ public class View extends JFrame {
 		});
 
 		JMenuItem saveRecommendedFilms = new JMenuItem(
-				"Save recommended films list");
+				"Save recommended films list", 'S');
 		saveRecommendedFilms.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JFileChooser dialogue = new JFileChooser();
@@ -352,22 +355,41 @@ public class View extends JFrame {
 						database.saveOutPutToJSON();
 					} catch (IOException e) {
 						JOptionPane.showMessageDialog(rootPane,
-								"Failled to save film list!", "Error",
+								"Failed to save films list!", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					}
-					JOptionPane.showMessageDialog(rootPane, "Film list saved!",
+					JOptionPane.showMessageDialog(rootPane, "Films list saved!",
 							"Information", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
+		
+		JMenuItem aboutItem = new JMenuItem("About", 'A');
+		aboutItem.addActionListener(new ActionListener(){
+		      public void actionPerformed(ActionEvent arg0) {
+		        JOptionPane.showMessageDialog(null, "This software was developed by Yoni Levy and Romain Tissier, engineering students at TELECOM Nancy. \n"
+		        		+ "\n"
+		        		+ "Thanks for use FilmFinder.", "About", JOptionPane.NO_OPTION);        
+		      }            
+		    });
 
 		JMenu fileMenu = new JMenu("File");
+		fileMenu.setMnemonic('f');
+		addDatabaseItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,Event.CTRL_MASK));
 		fileMenu.add(addDatabaseItem);
+		saveRecommendedFilms.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,Event.CTRL_MASK));
 		fileMenu.add(saveRecommendedFilms);
+		closeItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,Event.CTRL_MASK));
 		fileMenu.add(closeItem);
+
+		JMenu aboutMenu = new JMenu("About");
+		aboutMenu.setMnemonic('a');
+		aboutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,Event.CTRL_MASK));
+		aboutMenu.add(aboutItem);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileMenu);
+		menuBar.add(aboutMenu);
 
 		super.setJMenuBar(menuBar);
 	}

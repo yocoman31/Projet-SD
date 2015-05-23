@@ -1,12 +1,15 @@
-package filmfinder;
+package tests;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
 
+import filmfinder.Database;
+import filmfinder.Media;
+import filmfinder.MediaAlgorithm;
 import filmfinder.Media.Type;
 
 public class TestMediaAlgorithm {
@@ -15,55 +18,49 @@ public class TestMediaAlgorithm {
 	public void testCasting() {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
-		algo.setCastingWeight(5);
-		if (algo.getCastingWeight() != 5) {
-			fail("Le poids du casting n'est pas bon");
-		}
+		Integer weight = 5;
+		algo.setCastingWeight(weight);
+		assertEquals("Erreur dans setCastingWeight()", weight, algo.getCastingWeight());
 	}
 
 	@Test
 	public void testDirector() {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
-		algo.setDirectorWeight(5);
-		;
-		if (algo.getDirectorWeight() != 5) {
-			fail("Le poids du director n'est pas bon");
-		}
+		Integer weight = 5;
+		algo.setDirectorWeight(weight);
+		assertEquals("Erreur dans setDirectorWeight()", weight, algo.getDirectorWeight());
 	}
 
 	@Test
 	public void testGenre() {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
-		algo.setGenresWeight(5);
-		if (algo.getGenreWeight() != 5) {
-			fail("Le poids du genre n'est pas bon");
-		}
+		Integer weight = 5;
+		algo.setGenresWeight(weight);
+		assertEquals("Erreur dans setGenresWeight()", weight, algo.getGenreWeight());
+		
 	}
 
 	@Test
 	public void testRecommandation() {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
-		algo.setNbRecommandation(5);
-		if (algo.getNbRecommandation() != 5) {
-			fail("Le nombre de recommandations n'est pas bon");
-		}
+		Integer recommandations = 5;
+		algo.setNbRecommandation(recommandations);
+		assertEquals("Erreur dans setNbRecommandation()", recommandations, algo.getNbRecommandation());
 	}
 
 	@Test
 	public void testDuration() {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
-		algo.setDurationWeight(5);
-		if (algo.getDurationWeight() != 5) {
-			fail("Le poids de la durée n'est pas bon");
-		}
-		algo.setDurationShift(15);
-		if (algo.getDurationShift() != 15) {
-			fail("Le décalage pour la durée n'est pas bon");
-		}
+		Integer weight = 5;
+		Integer duration = 10;
+		algo.setDurationWeight(weight);
+		assertEquals("Erreur dans setDurationWeight()", weight, algo.getDurationWeight());
+		algo.setDurationShift(duration);
+		assertEquals("Erreur dans setDurationShift()", duration, algo.getDurationShift());
 	}
 
 	@Test
@@ -71,17 +68,11 @@ public class TestMediaAlgorithm {
 		Database database = new Database();
 		MediaAlgorithm algo = new MediaAlgorithm(database);
 		algo.setType(Type.FILM);
-		if (algo.getType() != Type.FILM) {
-			fail("Le type n'est pas bon");
-		}
+		assertEquals("Erreur dans setType()", Type.FILM, algo.getType());
 		algo.setType(Type.SERIE);
-		if (algo.getType() != Type.SERIE) {
-			fail("Le type n'est pas bon");
-		}
+		assertEquals("Erreur dans setType()", Type.SERIE, algo.getType());
 		algo.setType(Type.NONE);
-		if (algo.getType() != Type.NONE) {
-			fail("Le type n'est pas bon");
-		}
+		assertEquals("Erreur dans setType()", Type.NONE, algo.getType());
 	}
 
 	@Test
@@ -96,9 +87,7 @@ public class TestMediaAlgorithm {
 
 		database.addFilmsSeen(films);
 		ArrayList<Media> res = algo.execute();
-		if (!res.get(0).getTitle().equals("Fast and Furious")) {
-			fail("Problème dans l'algorithme");
-		}
+		assertEquals("Erreur dans l'execution de l'algorithme", "Fast and Furious", res.get(0).getTitle());
 	}
 	// TODO: (Yoni) de même avec divergente :)
 

@@ -36,7 +36,7 @@ public final class Utils {
 	 * @return the number of occurrence
 	 */
 	public final static int countOccurence(String s, char c) {
-		int res = 1;
+		int res = 0;
 		while (s.indexOf(c) != -1) {
 			res++;
 			s = s.substring(s.indexOf(c) + 1);

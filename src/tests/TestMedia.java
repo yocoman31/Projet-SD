@@ -1,9 +1,10 @@
-package filmfinder;
+package tests;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import filmfinder.Media;
 import filmfinder.Media.Type;
 
 public class TestMedia {
@@ -20,30 +21,14 @@ public class TestMedia {
 		Integer duration = 120;
 		Media media = new Media(titre, year, type, synopsis, directors,
 				casting, genres, duration);
-		if (!media.getTitle().equals(titre)) {
-			fail("Problème dans l'ajout du titre");
-		}
-		if (media.getYear() != year) {
-			fail("Problème dans l'ajout de l'année");
-		}
-		if (media.getYear() != year) {
-			fail("Problème dans l'ajout de l'année");
-		}
-		if (!media.getSynopsis().equals(synopsis)) {
-			fail("Problème dans l'ajout du synopsis");
-		}
-		if (!media.getDirectors().equals(directors)) {
-			fail("Problème dans l'ajout des directeurs");
-		}
-		if (!media.getCasting().equals(casting)) {
-			fail("Problème dans l'ajout du casting");
-		}
-		if (!media.getGenres().equals(genres)) {
-			fail("Problème dans l'ajout des genres");
-		}
-		if (media.getDuration() != duration) {
-			fail("Problème dans l'ajout de la durée");
-		}
+		assertEquals("Erreur sur le titre dans le constructeur", titre, media.getTitle());
+		assertEquals("Erreur sur l'année dans le constructeur", year, media.getYear());
+		assertEquals("Erreur sur le type dans le constructeur", type, media.getType());
+		assertEquals("Erreur sur le synopsis dans le constructeur", synopsis, media.getSynopsis());
+		assertArrayEquals("Erreur sur les direteurs dans le constructeur", directors, media.getDirectors());
+		assertArrayEquals("Erreur sur le casting dans le constructeur", casting, media.getCasting());
+		assertArrayEquals("Erreur sur le genre dans le constructeur", genres, media.getGenres());
+		assertEquals("Erreur sur la durée dans le constructeur", duration, media.getDuration());
 	}
 
 	@Test
@@ -51,9 +36,7 @@ public class TestMedia {
 		Media media = new Media();
 		String titre = "Test titre";
 		media.setTitle(titre);
-		if (!media.getTitle().equals(titre)) {
-			fail("Problème dans l'ajout du titre");
-		}
+		assertEquals("Erreur dans setTitle()", titre, media.getTitle());
 	}
 
 	@Test
@@ -61,9 +44,7 @@ public class TestMedia {
 		Media media = new Media();
 		Integer year = 2000;
 		media.setYear(year);
-		if (media.getYear() != year) {
-			fail("Problème dans l'ajout de l'année");
-		}
+		assertEquals("Erreur dans setYear()", year, media.getYear());
 	}
 
 	@Test
@@ -71,9 +52,7 @@ public class TestMedia {
 		Media media = new Media();
 		Type type = Type.FILM;
 		media.setType(type);
-		if (!media.getType().equals(type)) {
-			fail("Problème dans l'ajout du type");
-		}
+		assertEquals("Erreur dans setType()", type, media.getType());
 	}
 
 	@Test
@@ -81,9 +60,7 @@ public class TestMedia {
 		Media media = new Media();
 		String synopsis = "C'est l'histoire d'un test qui fonctionnait à merveille";
 		media.setSynopsis(synopsis);
-		if (!media.getSynopsis().equals(synopsis)) {
-			fail("Problème dans l'ajout du synopsis");
-		}
+		assertEquals("Erreur dans setSynopsis()", synopsis, media.getSynopsis());
 	}
 
 	@Test
@@ -91,9 +68,7 @@ public class TestMedia {
 		Media media = new Media();
 		String[] directors = { "director1", "director2", "director3" };
 		media.setDirectors(directors);
-		if (!media.getDirectors().equals(directors)) {
-			fail("Problème dans l'ajout des directors");
-		}
+		assertArrayEquals("Erreur dans setDirectors()", directors, media.getDirectors());
 	}
 
 	@Test
@@ -101,9 +76,7 @@ public class TestMedia {
 		Media media = new Media();
 		String[] casting = { "acteur1", "acteur2", "acteur3" };
 		media.setCasting(casting);
-		if (!media.getCasting().equals(casting)) {
-			fail("Problème dans l'ajout du casting");
-		}
+		assertArrayEquals("Erreur dans setCasting()", casting, media.getCasting());
 	}
 
 	@Test
@@ -111,9 +84,7 @@ public class TestMedia {
 		Media media = new Media();
 		String[] genres = { "genre1", "genre2", "genre3" };
 		media.setGenres(genres);
-		if (!media.getGenres().equals(genres)) {
-			fail("Problème dans l'ajout des genres");
-		}
+		assertArrayEquals("Erreur dans setGenre()", genres, media.getGenres());
 	}
 
 	@Test
@@ -121,8 +92,6 @@ public class TestMedia {
 		Media media = new Media();
 		Integer duration = 120;
 		media.setDuration(duration);
-		if (media.getDuration() != duration) {
-			fail("Problème dans l'ajout de la durée");
-		}
+		assertEquals("Erreur dans setDuration()", duration, media.getDuration());
 	}
 }

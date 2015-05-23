@@ -175,7 +175,7 @@ public class Database {
 				} else
 					tampon = scanner.nextLine();
 				if (tampon.startsWith("Director")) {
-					directors = new String[Utils.countOccurence(tampon, ',')];
+					directors = new String[Utils.countOccurence(tampon, ',')+1];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < directors.length; i++) {
 						if (tampon.indexOf(',') != -1) {
@@ -186,7 +186,7 @@ public class Database {
 							directors[i] = Utils.eraseSpace(tampon);
 					}
 				} else if (tampon.startsWith("With")) {
-					casting = new String[Utils.countOccurence(tampon, ',')];
+					casting = new String[Utils.countOccurence(tampon, ',')+1];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < casting.length; i++) {
 						if (tampon.indexOf(',') != -1) {
@@ -197,7 +197,7 @@ public class Database {
 							casting[i] = Utils.eraseSpace(tampon);
 					}
 				} else if (!tampon.equals("")) {
-					genre = new String[Utils.countOccurence(tampon, '|')];
+					genre = new String[Utils.countOccurence(tampon, '|')+1];
 					tampon = tampon.substring(tampon.indexOf(':') + 1);
 					for (int i = 0; i < genre.length; i++) {
 						if (tampon.indexOf('|') != -1) {
