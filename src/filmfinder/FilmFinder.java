@@ -1,8 +1,5 @@
 package filmfinder;
 
-//TODO: mettre à jour help :)
-//TODO: regler problème de la pop-up si annulation de la sauvegarde en json
-
 import java.io.IOException;
 import java.util.ArrayList;
 

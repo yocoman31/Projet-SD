@@ -9,12 +9,8 @@ import java.util.HashMap;
  * @author Yoni Levy & Romain Tissier
  *
  */
-public class MediaAlgorithm {
+public class MediaAlgorithm extends AbstractAlgorithm {
 
-	/**
-	 * Films not seen by the user
-	 */
-	private HashMap<Media, Integer> filmsNotSeen;
 	/**
 	 * Coefficients of the critter
 	 */
@@ -23,12 +19,7 @@ public class MediaAlgorithm {
 	 * Configuration variables
 	 */
 	private Integer averageDuration, genreWeight, castingWeight,
-			directorWeight, durationShift, durationWeight, nbRecommandation;
-	private Media.Type type;
-	/**
-	 * Database used by the algorithm
-	 */
-	private Database database;
+			directorWeight, durationShift, durationWeight;
 
 	/**
 	 * Constructor initializing algorithm
@@ -37,7 +28,7 @@ public class MediaAlgorithm {
 	 *            : database used by the algorithm
 	 */
 	public MediaAlgorithm(Database database) {
-		this.database = database;
+		super(database);
 		averageDuration = null;
 		setNbRecommandation(10);
 		genreWeight = null;
@@ -45,7 +36,6 @@ public class MediaAlgorithm {
 		directorWeight = null;
 		durationShift = null;
 		durationWeight = null;
-		filmsNotSeen = new HashMap<Media, Integer>();
 		coefGenres = new HashMap<String, Integer>();
 		coefDirectors = new HashMap<String, Integer>();
 		coefCasting = new HashMap<String, Integer>();
@@ -54,10 +44,8 @@ public class MediaAlgorithm {
 	/**
 	 * Private method initializing the HashMap
 	 */
-	private void initAlgorithm() {
-		filmsNotSeen.clear();
-		for (Media m : database.getFilmsNotSeen())
-			filmsNotSeen.put(m, 0);
+	public void initAlgorithm() {
+		super.initAlgorithm();
 		coefGenres.clear();
 		coefDirectors.clear();
 		coefCasting.clear();
@@ -272,32 +260,5 @@ public class MediaAlgorithm {
 	 */
 	public void setDurationShift(Integer durationShift) {
 		this.durationShift = durationShift;
-	}
-
-	/**
-	 * Getter returning the type of media
-	 * 
-	 * @return type of media
-	 */
-	public Media.Type getType() {
-		return type;
-	}
-
-	/**
-	 * Setter modifying the type of media
-	 * 
-	 * @param type
-	 *            : new type of media
-	 */
-	public void setType(Media.Type type) {
-		this.type = type;
-	}
-
-	public Integer getNbRecommandation() {
-		return nbRecommandation;
-	}
-
-	public void setNbRecommandation(Integer nbRecommandation) {
-		this.nbRecommandation = nbRecommandation;
 	}
 }
