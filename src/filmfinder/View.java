@@ -96,7 +96,7 @@ public class View extends JFrame {
 		JPanel btnFindpan = new JPanel();
 		btnFindpan.add(findButton);
 
-		JLabel labelGenre = new JLabel("Genref coefficient:");
+		JLabel labelGenre = new JLabel("Genres coefficient:");
 		JPanel labelGenrePan = new JPanel();
 		labelGenrePan.add(labelGenre);
 
